@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>2026 全球 AI 产业链利润分配 · 桑基图报告</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="src/style.css" />
+  <link rel="stylesheet" href="src/upstream.css" />
+</head>
+<body>
+  <div class="shell">
+
+    <!-- ============== 左侧细窄导览栏 ============== -->
+    <aside class="rail">
+      <div class="rail-stamps">
+        <span class="stamp">FILE №&nbsp;02-2026</span>
+        <span class="stamp">CONFIDENTIAL</span>
+      </div>
+
+      <div class="rail-eyebrow">SANKEY</div>
+      <h2 class="rail-title">2026 AI<br><em>profit map</em></h2>
+
+      <div class="rail-eyebrow">VIEW</div>
+      <div class="control-group vertical">
+        <button data-view="geo"   class="is-active">Country → Company</button>
+        <button data-view="layer">Layer → Company<br><span class="rail-hint">NVIDIA 5-Layer Cake</span></button>
+      </div>
+
+      <div class="rail-eyebrow">RANK</div>
+      <div class="control-group vertical">
+        <button data-topn="30" class="is-active">Top 30<span class="rail-hint">default · tails merged</span></button>
+        <button data-topn="12">Top 12</button>
+        <button data-topn="8">Top 8</button>
+        <button data-topn="5">Top 5</button>
+        <button data-topn="0">All 80<span class="rail-hint">no merge</span></button>
+      </div>
+
+      <div class="rail-eyebrow">LEGEND</div>
+      <div class="legend" id="legend-geo">
+        <span><i style="background:var(--amber)"></i>US &amp; Canada</span>
+        <span><i style="background:var(--crimson)"></i>Mainland China</span>
+        <span><i style="background:var(--moss)"></i>Taiwan</span>
+        <span><i style="background:var(--moss-2)"></i>South Korea</span>
+        <span><i style="background:var(--moss-3)"></i>Japan</span>
+        <span><i style="background:var(--slate)"></i>Europe</span>
+        <span><i style="background:var(--ash)"></i>Others</span>
+      </div>
+      <div class="legend" id="legend-layer" hidden>
+        <span><i style="background:var(--ash)"></i>L1 Energy</span>
+        <span><i style="background:var(--amber)"></i>L2 Chip</span>
+        <span><i style="background:var(--slate)"></i>L3 Computing Infra</span>
+        <span><i style="background:var(--crimson)"></i>L4 Model</span>
+        <span><i style="background:var(--moss)"></i>L5 Application</span>
+      </div>
+      <div class="legend-proxy" title="未盈利 / 按一级市场估值折算的公司（OpenAI · Anthropic · xAI · Cohere · Lambda · Crusoe · Mistral）">
+        <span class="proxy-glyph">▒</span> 估值代理 · 虚线节点
+      </div>
+
+      <div class="rail-foot">
+        Sources · GS · McKinsey · Bloomberg · CITIC<br>
+        Taxonomy · <a href="https://blogs.nvidia.cn/blog/ai-5-layer-cake/" target="_blank" rel="noopener">NVIDIA Five-Layer Cake</a><br>
+        v0.6 · 2026.07
+      </div>
+
+      <div class="kb-hints">
+        <kbd>G</kbd> geo &nbsp;<kbd>L</kbd> layer<br>
+        <kbd>U</kbd> 上游 &nbsp;<kbd>I</kbd> 基建<br>
+        <kbd>M</kbd> 模型 &nbsp;<kbd>A</kbd> 应用<br>
+        <kbd>E</kbd> 具身<br>
+        <kbd>1</kbd>-<kbd>5</kbd> rank &nbsp;<kbd>Esc</kbd> clear
+      </div>
+    </aside>
+
+    <!-- ============== 右侧主区：桑基图为绝对主角 ============== -->
+    <main class="main">
+
+      <nav class="view-tabs">
+        <button class="view-tab is-active" data-page="sankey">全球利润</button>
+        <button class="view-tab" data-page="upstream">上游·材料设备</button>
+        <button class="view-tab" data-page="infra">中游·算力基建</button>
+        <button class="view-tab" data-page="model-platform">中游·模型平台</button>
+        <button class="view-tab" data-page="apps">下游·应用服务</button>
+        <button class="view-tab" data-page="embodied">终端·具身硬件</button>
+      </nav>
+
+      <!-- ══════ Sankey 视图 ══════ -->
+      <div id="sankey-view">
+
+      <header class="report-head">
+        <div class="head-left">
+          <div class="kicker">Profit Ledger · 2026E · USD bn</div>
+          <h1 class="title">
+            The <em>profit map</em> of the 2026 AI value chain,<br>
+            from countries — and from the <em>five layers</em> — to companies.
+          </h1>
+        </div>
+        <div class="kpis">
+          <div class="kpi"><div class="kpi-label">2026E Total</div><div class="kpi-value" id="total-bn">—</div></div>
+          <div class="kpi"><div class="kpi-label">#1 Capturer</div><div class="kpi-value" id="top1">—</div></div>
+          <div class="kpi"><div class="kpi-label">Top 3 Share</div><div class="kpi-value" id="top3">—</div></div>
+          <div class="kpi"><div class="kpi-label">Top 10 Share</div><div class="kpi-value" id="top10">—</div></div>
+        </div>
+      </header>
+
+      <div class="focus-line" id="focus-line">— hover / click any node</div>
+
+      <!-- ★ 主角：桑基图 -->
+      <div class="sankey-stage">
+        <svg id="sankey" role="img" aria-label="2026 AI profit Sankey"
+             preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+
+      <!-- ★ 紧贴桑基：三条 observation callout（30 秒叙事落点） -->
+      <section class="observations" id="observations">
+        <article class="obs">
+          <div class="obs-glyph"><span class="obs-num">01</span>OBSERVATION</div>
+          <h3 class="obs-title">三家拿走四成。</h3>
+          <p class="obs-body">NVIDIA + Microsoft* + Alphabet 三家合计切走全产业链约 <strong>42.9%</strong> 的利润。其中 NVIDIA 单独占 <strong>24.1%</strong>，大于第二三名之和。TSMC（第4，6.8%）已被 Alphabet（第3，8.4%）超越。</p>
+        </article>
+        <article class="obs">
+          <div class="obs-glyph"><span class="obs-num">02</span>OBSERVATION</div>
+          <h3 class="obs-title">L2 Chip 一层 ≈ 41.6% 全盘利润。</h3>
+          <p class="obs-body">按 NVIDIA 5-Layer Cake，芯片层（NVIDIA + TSMC + ASML + Broadcom + TEL 等）独自切走 <strong>337.4 / 812 bn ≈ 41.6%</strong>。L1 Energy / L4 Model 各占 <strong>3.8% / 6.5%</strong>，是利润最薄、却是 2026 年增速最快的两层。L4 中过半是 <em>估值代理</em>（虚线节点），实际盈利占比更小。</p>
+        </article>
+        <article class="obs">
+          <div class="obs-glyph"><span class="obs-num">03</span>OBSERVATION</div>
+          <h3 class="obs-title">欧洲靠 ASML 一根柱子。</h3>
+          <p class="obs-body">欧洲 2.9% 的份额里，ASML 一家就贡献了 <strong>14 / 23.8 bn ≈ 58.8%</strong>。若剔除 ASML，欧洲阵营实际利润规模与「其他」项相当。</p>
+        </article>
+      </section>
+
+      <!-- 桑基图下方的双表 + 批注 -->
+      <section class="below">
+
+        <div class="tables">
+          <div class="t-block">
+            <div class="t-head">
+              <span class="t-eyebrow">LAYER STACK · NVIDIA 5-LAYER CAKE</span>
+              <span class="t-hint">Jensen @ Davos 2025</span>
+            </div>
+            <table class="ledger-table">
+              <thead>
+                <tr><th>Layer</th><th style="text-align:right">bn</th><th style="text-align:right">%</th></tr>
+              </thead>
+              <tbody id="layer-stack-body"></tbody>
+            </table>
+          </div>
+
+          <div class="t-block">
+            <div class="t-head">
+              <span class="t-eyebrow">TOP CAPTURERS · LIVE</span>
+              <span class="t-hint" id="view-hint">— view: Country → Company</span>
+            </div>
+            <table class="ledger-table">
+              <thead>
+                <tr><th>№</th><th>Entity</th><th style="text-align:right">USD&nbsp;bn</th><th style="text-align:right">%</th></tr>
+              </thead>
+              <tbody id="ledger-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      </div><!-- #sankey-view -->
+
+      <!-- ══════ 上游供应链视图 ══════ -->
+      <div id="upstream-view" hidden>
+
+        <div class="upstream-kpis">
+          <div class="upstream-kpi">
+            <div class="upstream-kpi-label">已映射品类</div>
+            <div id="upstream-kpi-cats"><span class="upstream-kpi-value">0</span><span class="upstream-kpi-sub">/ 42 品类</span></div>
+          </div>
+          <div class="upstream-kpi">
+            <div class="upstream-kpi-label">已映射公司</div>
+            <div id="upstream-kpi-companies"><span class="upstream-kpi-value">0</span><span class="upstream-kpi-sub">A股 0 · 港股 0</span></div>
+          </div>
+          <div class="upstream-kpi">
+            <div class="upstream-kpi-label">国产主导品类</div>
+            <div id="upstream-kpi-l3"><span class="upstream-kpi-value">—</span><span class="upstream-kpi-sub">L3 主导 · L2 突破 · L1 起步</span></div>
+          </div>
+          <div class="upstream-kpi">
+            <div class="upstream-kpi-label">平均弹性系数</div>
+            <div id="upstream-kpi-elasticity"><span class="upstream-kpi-value" style="color:var(--ink-mute)">—</span><span class="upstream-kpi-sub">待 Vibe-Trading 数据校准</span></div>
+          </div>
+        </div>
+
+        <div id="upstream-kpi-filtered" style="font-family:var(--mono);font-size:10px;color:var(--ink-dim);text-align:center;margin-bottom:12px;display:none"></div>
+
+        <div class="filter-bar">
+          <span class="filter-label">组别</span>
+          <button class="filter-chip is-active" data-group="all">全部</button>
+          <button class="filter-chip" data-group="金属组">金属组</button>
+          <button class="filter-chip" data-group="特气组">特气组</button>
+          <button class="filter-chip" data-group="材料组">材料组</button>
+          <button class="filter-chip" data-group="零件组">零件组</button>
+          <button class="filter-chip" data-group="电算协同">电算协同</button>
+
+          <span class="filter-label" style="margin-left:12px">阶段</span>
+          <button class="filter-chip is-active" data-stage="all">全部</button>
+          <button class="filter-chip" data-stage="L3">L3 国产主导</button>
+          <button class="filter-chip" data-stage="L2">L2 国产突破</button>
+          <button class="filter-chip" data-stage="L1">L1 国产起步</button>
+
+          <span class="filter-label" style="margin-left:12px">市场</span>
+          <button class="filter-chip is-active" data-market="all">全部</button>
+          <button class="filter-chip" data-market="A股">A股</button>
+          <button class="filter-chip" data-market="港股">港股</button>
+
+          <input type="text" class="filter-search" id="upstream-search" placeholder="搜索品类 / 公司 / ticker..." />
+        </div>
+
+        <div class="upstream-table-wrap">
+          <table class="upstream-table">
+            <thead id="upstream-table-head">
+              <tr>
+                <th>组别</th>
+                <th class="sortable" data-sort="name">品类</th>
+                <th class="sortable" data-sort="substage">国产阶段</th>
+                <th>市场</th>
+                <th class="sortable" data-sort="elasticity">弹性系数</th>
+                <th class="sortable" data-sort="cats">公司数</th>
+                <th>备注</th>
+              </tr>
+            </thead>
+            <tbody id="upstream-table-body"></tbody>
+          </table>
+        </div>
+
+        <p class="upstream-footnote" id="upstream-last-updated">
+          数据版本 — · 方法论文档见 <a href="docs/upstream-methodology.md" target="_blank">upstream-methodology.md</a> ·
+          弹性系数 = DOL × 定价权乘数 ·
+          47 品类 · 68 家公司已映射 · Vibe-Trading web_search 辅助筛选 · 财务数据待年报后更新
+        </p>
+
+      </div><!-- #upstream-view -->
+
+      <!-- ══════ 中游·算力基础设施 ══════ -->
+      <div id="infra-view" hidden>
+
+        <div class="upstream-kpis">
+          <div class="upstream-kpi">
+            <div class="upstream-kpi-label">已映射赛道</div>
+            <div id="infra-kpi-cats"><span class="upstream-kpi-value">0</span><span class="upstream-kpi-sub">/ 7 赛道</span></div>
+          </div>
+          <div class="upstream-kpi">
+            <div class="upstream-kpi-label">已映射公司</div>
+            <div id="infra-kpi-companies"><span class="upstream-kpi-value">0</span><span class="upstream-kpi-sub">A股 0 · 港股 0</span></div>
+          </div>
+          <div class="upstream-kpi">
+            <div class="upstream-kpi-label">成熟运营赛道</div>
+            <div id="infra-kpi-l3"><span class="upstream-kpi-value">—</span><span class="upstream-kpi-sub">L3 成熟 · L2 爬坡 · L1 建设</span></div>
+          </div>
+          <div class="upstream-kpi">
+            <div class="upstream-kpi-label">平均弹性系数</div>
+            <div id="infra-kpi-elasticity"><span class="upstream-kpi-value" style="color:var(--ink-mute)">—</span><span class="upstream-kpi-sub">待校准</span></div>
+          </div>
+        </div>
+
+        <div id="infra-kpi-filtered" style="font-family:var(--mono);font-size:10px;color:var(--ink-dim);text-align:center;margin-bottom:12px;display:none"></div>
+
+        <div class="filter-bar">
+          <span class="filter-label">组别</span>
+          <button class="filter-chip is-active" data-group="all">全部</button>
+          <button class="filter-chip" data-group="算力运营">算力运营</button>
+          <button class="filter-chip" data-group="数字基建">数字基建</button>
+
+          <span class="filter-label" style="margin-left:12px">阶段</span>
+          <button class="filter-chip is-active" data-stage="all">全部</button>
+          <button class="filter-chip" data-stage="L3">L3 成熟运营</button>
+          <button class="filter-chip" data-stage="L2">L2 爬坡期</button>
+          <button class="filter-chip" data-stage="L1">L1 建设期</button>
+
+          <span class="filter-label" style="margin-left:12px">护城河</span>
+          <button class="filter-chip is-active" data-moat="all">全部</button>
+          <button class="filter-chip" data-moat="strong">强</button>
+          <button class="filter-chip" data-moat="medium">中</button>
+          <button class="filter-chip" data-moat="weak">弱</button>
+
+          <span class="filter-label" style="margin-left:12px">定价权</span>
+          <button class="filter-chip is-active" data-pricing="all">全部</button>
+          <button class="filter-chip" data-pricing="expanding">提价中</button>
+          <button class="filter-chip" data-pricing="flat">价格稳</button>
+          <button class="filter-chip" data-pricing="compressing">被压价</button>
+
+          <span class="filter-label" style="margin-left:12px">市场</span>
+          <button class="filter-chip is-active" data-market="all">全部</button>
+          <button class="filter-chip" data-market="A股">A股</button>
+          <button class="filter-chip" data-market="港股">港股</button>
+
+          <input type="text" class="filter-search" id="infra-search" placeholder="搜索赛道 / 公司 / ticker..." />
+        </div>
+
+        <div class="upstream-table-wrap">
+          <table class="upstream-table">
+            <thead id="infra-table-head">
+              <tr>
+                <th>组别</th>
+                <th class="sortable" data-sort="name">赛道</th>
+                <th class="sortable" data-sort="substage">阶段</th>
+                <th class="sortable" data-sort="moat">护城河</th>
+                <th class="sortable" data-sort="pricing">定价权</th>
+                <th class="sortable" data-sort="elasticity">弹性</th>
+                <th>市场</th>
+                <th>备注</th>
+              </tr>
+            </thead>
+            <tbody id="infra-table-body"></tbody>
+          </table>
+        </div>
+
+        <p class="upstream-footnote" id="infra-last-updated">
+          数据版本 — · 方法论文档见 <a href="docs/infra-methodology.md" target="_blank">infra-methodology.md</a> ·
+          弹性系数 = DOL × PricingPower · 7 赛道 · 15 公司 · Vibe-Trading web_search 辅助筛选
+        </p>
+
+      </div><!-- #infra-view -->
+
+      <!-- ══════ 中游·模型与平台 ══════ -->
+      <div id="model-platform-view" hidden>
+
+        <div class="upstream-kpis">
+          <div class="upstream-kpi">
+            <div class="upstream-kpi-label">已映射赛道</div>
+            <div id="model-platform-kpi-cats"><span class="upstream-kpi-value">0</span><span class="upstream-kpi-sub">/ 8 赛道</span></div>
+          </div>
+          <div class="upstream-kpi">
+            <div class="upstream-kpi-label">已映射公司</div>
+            <div id="model-platform-kpi-companies"><span class="upstream-kpi-value">0</span><span class="upstream-kpi-sub">A股 0 · 港股 0</span></div>
+          </div>
+          <div class="upstream-kpi">
+            <div class="upstream-kpi-label">规模商用赛道</div>
+            <div id="model-platform-kpi-l3"><span class="upstream-kpi-value">—</span><span class="upstream-kpi-sub">L3 规模商用 · L2 早期 · L1 研发</span></div>
+          </div>
+          <div class="upstream-kpi">
+            <div class="upstream-kpi-label">平均弹性系数</div>
+            <div id="model-platform-kpi-elasticity"><span class="upstream-kpi-value" style="color:var(--ink-mute)">—</span><span class="upstream-kpi-sub">待校准</span></div>
+          </div>
+        </div>
+
+        <div id="model-platform-kpi-filtered" style="font-family:var(--mono);font-size:10px;color:var(--ink-dim);text-align:center;margin-bottom:12px;display:none"></div>
+
+        <div class="filter-bar">
+          <span class="filter-label">组别</span>
+          <button class="filter-chip is-active" data-group="all">全部</button>
+          <button class="filter-chip" data-group="行业模型">行业模型</button>
+          <button class="filter-chip" data-group="端侧与工具">端侧与工具</button>
+
+          <span class="filter-label" style="margin-left:12px">阶段</span>
+          <button class="filter-chip is-active" data-stage="all">全部</button>
+          <button class="filter-chip" data-stage="L3">L3 规模商用</button>
+          <button class="filter-chip" data-stage="L2">L2 早期商用</button>
+          <button class="filter-chip" data-stage="L1">L1 研发期</button>
+
+          <span class="filter-label" style="margin-left:12px">护城河</span>
+          <button class="filter-chip is-active" data-moat="all">全部</button>
+          <button class="filter-chip" data-moat="strong">强</button>
+          <button class="filter-chip" data-moat="medium">中</button>
+          <button class="filter-chip" data-moat="weak">弱</button>
+
+          <span class="filter-label" style="margin-left:12px">定价权</span>
+          <button class="filter-chip is-active" data-pricing="all">全部</button>
+          <button class="filter-chip" data-pricing="expanding">提价中</button>
+          <button class="filter-chip" data-pricing="flat">价格稳</button>
+          <button class="filter-chip" data-pricing="compressing">被压价</button>
+
+          <span class="filter-label" style="margin-left:12px">市场</span>
+          <button class="filter-chip is-active" data-market="all">全部</button>
+          <button class="filter-chip" data-market="A股">A股</button>
+          <button class="filter-chip" data-market="港股">港股</button>
+
+          <input type="text" class="filter-search" id="model-platform-search" placeholder="搜索赛道 / 公司 / ticker..." />
+        </div>
+
+        <div class="upstream-table-wrap">
+          <table class="upstream-table">
+            <thead id="model-platform-table-head">
+              <tr>
+                <th>组别</th>
+                <th class="sortable" data-sort="name">赛道</th>
+                <th class="sortable" data-sort="substage">阶段</th>
+                <th class="sortable" data-sort="moat">护城河</th>
+                <th class="sortable" data-sort="pricing">定价权</th>
+                <th class="sortable" data-sort="elasticity">弹性</th>
+                <th>市场</th>
+                <th>备注</th>
+              </tr>
+            </thead>
+            <tbody id="model-platform-table-body"></tbody>
+          </table>
+        </div>
+
+        <p class="upstream-footnote" id="model-platform-last-updated">
+          数据版本 — · 方法论文档见 <a href="docs/model-platform-methodology.md" target="_blank">model-platform-methodology.md</a> ·
+          弹性系数 = DOL × PricingPower · 8 赛道 · 15 公司 · Vibe-Trading web_search 辅助筛选
+        </p>
+
+      </div><!-- #model-platform-view -->
+
+      <!-- ══════ 下游·应用与服务 ══════ -->
+      <div id="apps-view" hidden>
+
+        <div class="upstream-kpis">
+          <div class="upstream-kpi">
+            <div class="upstream-kpi-label">已映射赛道</div>
+            <div id="apps-kpi-cats"><span class="upstream-kpi-value">0</span><span class="upstream-kpi-sub">/ 14 赛道</span></div>
+          </div>
+          <div class="upstream-kpi">
+            <div class="upstream-kpi-label">已映射公司</div>
+            <div id="apps-kpi-companies"><span class="upstream-kpi-value">0</span><span class="upstream-kpi-sub">A股 0 · 港股 0</span></div>
+          </div>
+          <div class="upstream-kpi">
+            <div class="upstream-kpi-label">规模盈利赛道</div>
+            <div id="apps-kpi-l3"><span class="upstream-kpi-value">—</span><span class="upstream-kpi-sub">L3 规模盈利 · L2 早期 · L1 Pre-Rev</span></div>
+          </div>
+          <div class="upstream-kpi">
+            <div class="upstream-kpi-label">平均弹性系数</div>
+            <div id="apps-kpi-elasticity"><span class="upstream-kpi-value" style="color:var(--ink-mute)">—</span><span class="upstream-kpi-sub">待校准</span></div>
+          </div>
+        </div>
+
+        <div id="apps-kpi-filtered" style="font-family:var(--mono);font-size:10px;color:var(--ink-dim);text-align:center;margin-bottom:12px;display:none"></div>
+
+        <div class="filter-bar">
+          <span class="filter-label">组别</span>
+          <button class="filter-chip is-active" data-group="all">全部</button>
+          <button class="filter-chip" data-group="B2B应用">B2B 企业应用</button>
+          <button class="filter-chip" data-group="B2C平台">B2C 消费平台</button>
+
+          <span class="filter-label" style="margin-left:12px">阶段</span>
+          <button class="filter-chip is-active" data-stage="all">全部</button>
+          <button class="filter-chip" data-stage="L3">L3 规模盈利</button>
+          <button class="filter-chip" data-stage="L2">L2 早起商业</button>
+          <button class="filter-chip" data-stage="L1">L1 Pre-Rev</button>
+
+          <span class="filter-label" style="margin-left:12px">护城河</span>
+          <button class="filter-chip is-active" data-moat="all">全部</button>
+          <button class="filter-chip" data-moat="strong">强</button>
+          <button class="filter-chip" data-moat="medium">中</button>
+          <button class="filter-chip" data-moat="weak">弱</button>
+
+          <span class="filter-label" style="margin-left:12px">定价权</span>
+          <button class="filter-chip is-active" data-pricing="all">全部</button>
+          <button class="filter-chip" data-pricing="expanding">提价中</button>
+          <button class="filter-chip" data-pricing="flat">价格稳</button>
+          <button class="filter-chip" data-pricing="compressing">被压价</button>
+
+          <span class="filter-label" style="margin-left:12px">市场</span>
+          <button class="filter-chip is-active" data-market="all">全部</button>
+          <button class="filter-chip" data-market="A股">A股</button>
+          <button class="filter-chip" data-market="港股">港股</button>
+
+          <input type="text" class="filter-search" id="apps-search" placeholder="搜索赛道 / 公司 / ticker..." />
+        </div>
+
+        <div class="upstream-table-wrap">
+          <table class="upstream-table">
+            <thead id="apps-table-head">
+              <tr>
+                <th>组别</th>
+                <th class="sortable" data-sort="name">赛道</th>
+                <th class="sortable" data-sort="substage">阶段</th>
+                <th class="sortable" data-sort="moat">护城河</th>
+                <th class="sortable" data-sort="pricing">定价权</th>
+                <th class="sortable" data-sort="elasticity">弹性</th>
+                <th>市场</th>
+                <th>备注</th>
+              </tr>
+            </thead>
+            <tbody id="apps-table-body"></tbody>
+          </table>
+        </div>
+
+        <p class="upstream-footnote" id="apps-last-updated">
+          数据版本 — · 方法论文档见 <a href="docs/apps-methodology.md" target="_blank">apps-methodology.md</a> ·
+          弹性系数 = DOL × PricingPower · 14 赛道 · 18 公司 · Vibe-Trading web_search 辅助筛选
+        </p>
+
+      </div><!-- #apps-view -->
+
+      <!-- ══════ 终端·具身与硬件 ══════ -->
+      <div id="embodied-view" hidden>
+
+        <div class="upstream-kpis">
+          <div class="upstream-kpi">
+            <div class="upstream-kpi-label">已映射赛道</div>
+            <div id="embodied-kpi-cats"><span class="upstream-kpi-value">0</span><span class="upstream-kpi-sub">/ 8 赛道</span></div>
+          </div>
+          <div class="upstream-kpi">
+            <div class="upstream-kpi-label">已映射公司</div>
+            <div id="embodied-kpi-companies"><span class="upstream-kpi-value">0</span><span class="upstream-kpi-sub">A股 0 · 港股 0</span></div>
+          </div>
+          <div class="upstream-kpi">
+            <div class="upstream-kpi-label">规模出货赛道</div>
+            <div id="embodied-kpi-l3"><span class="upstream-kpi-value">—</span><span class="upstream-kpi-sub">L3 规模出货 · L2 小批量 · L1 研发</span></div>
+          </div>
+          <div class="upstream-kpi">
+            <div class="upstream-kpi-label">平均弹性系数</div>
+            <div id="embodied-kpi-elasticity"><span class="upstream-kpi-value" style="color:var(--ink-mute)">—</span><span class="upstream-kpi-sub">待校准</span></div>
+          </div>
+        </div>
+
+        <div id="embodied-kpi-filtered" style="font-family:var(--mono);font-size:10px;color:var(--ink-dim);text-align:center;margin-bottom:12px;display:none"></div>
+
+        <div class="filter-bar">
+          <span class="filter-label">组别</span>
+          <button class="filter-chip is-active" data-group="all">全部</button>
+          <button class="filter-chip" data-group="机器人">机器人</button>
+          <button class="filter-chip" data-group="智驾与硬件">智驾与硬件</button>
+
+          <span class="filter-label" style="margin-left:12px">阶段</span>
+          <button class="filter-chip is-active" data-stage="all">全部</button>
+          <button class="filter-chip" data-stage="L3">L3 规模出货</button>
+          <button class="filter-chip" data-stage="L2">L2 小批量</button>
+          <button class="filter-chip" data-stage="L1">L1 研发样品</button>
+
+          <span class="filter-label" style="margin-left:12px">护城河</span>
+          <button class="filter-chip is-active" data-moat="all">全部</button>
+          <button class="filter-chip" data-moat="strong">强</button>
+          <button class="filter-chip" data-moat="medium">中</button>
+          <button class="filter-chip" data-moat="weak">弱</button>
+
+          <span class="filter-label" style="margin-left:12px">定价权</span>
+          <button class="filter-chip is-active" data-pricing="all">全部</button>
+          <button class="filter-chip" data-pricing="expanding">提价中</button>
+          <button class="filter-chip" data-pricing="flat">价格稳</button>
+          <button class="filter-chip" data-pricing="compressing">被压价</button>
+
+          <span class="filter-label" style="margin-left:12px">市场</span>
+          <button class="filter-chip is-active" data-market="all">全部</button>
+          <button class="filter-chip" data-market="A股">A股</button>
+          <button class="filter-chip" data-market="港股">港股</button>
+
+          <input type="text" class="filter-search" id="embodied-search" placeholder="搜索赛道 / 公司 / ticker..." />
+        </div>
+
+        <div class="upstream-table-wrap">
+          <table class="upstream-table">
+            <thead id="embodied-table-head">
+              <tr>
+                <th>组别</th>
+                <th class="sortable" data-sort="name">赛道</th>
+                <th class="sortable" data-sort="substage">阶段</th>
+                <th class="sortable" data-sort="moat">护城河</th>
+                <th class="sortable" data-sort="pricing">定价权</th>
+                <th class="sortable" data-sort="elasticity">弹性</th>
+                <th>市场</th>
+                <th>备注</th>
+              </tr>
+            </thead>
+            <tbody id="embodied-table-body"></tbody>
+          </table>
+        </div>
+
+        <p class="upstream-footnote" id="embodied-last-updated">
+          数据版本 — · 方法论文档见 <a href="docs/embodied-methodology.md" target="_blank">embodied-methodology.md</a> ·
+          弹性系数 = DOL × PricingPower · 8 赛道 · 14 公司 · Vibe-Trading web_search 辅助筛选
+        </p>
+
+      </div><!-- #embodied-view -->
+
+      <!-- ══════ 下游应用链视图（已废弃，保留参考） ══════ -->
+      <div id="downstream-view" hidden>
+
+        <header class="report-head">
+          <div class="head-left">
+            <div class="kicker">Profit Ledger · 2026E · L5+ 之后的应用层分账</div>
+            <h1 class="title">
+              从 L5 Application 走出之后，<em>谁能接住</em>那 260 bn？
+            </h1>
+            <p class="sub" style="font-family:var(--mono);font-size:11px;color:var(--ink-dim);margin-top:8px;letter-spacing:0.04em">
+              37 赛道 × 61 公司（A 股 48 / 港股 13）· 按 <strong style="color:var(--ink)">moat</strong>（护城河强度）× <strong style="color:var(--ink)">pricingPower</strong>（定价权趋势）二维过滤 · 平行的下游口径见 <a href="docs/downstream-methodology.md" target="_blank" style="color:var(--amber)">methodology</a>
+            </p>
+          </div>
+          <div class="kpis">
+            <div class="kpi"><div class="kpi-label">已映射赛道</div><div class="kpi-value" id="downstream-kpi-tracks">—</div></div>
+            <div class="kpi"><div class="kpi-label">已映射公司</div><div class="kpi-value" id="downstream-kpi-companies">—</div></div>
+            <div class="kpi"><div class="kpi-label">规模盈利赛道</div><div class="kpi-value" id="downstream-kpi-stage">—</div></div>
+            <div class="kpi"><div class="kpi-label">可提价赛道</div><div class="kpi-value" id="downstream-kpi-pricing">—</div></div>
+          </div>
+        </header>
+
+        <div id="downstream-kpi-filtered" style="font-family:var(--mono);font-size:10px;color:var(--ink-dim);text-align:center;margin:4px 0 12px;display:none"></div>
+
+        <div class="filter-bar">
+          <span class="filter-label">组别</span>
+          <button class="filter-chip is-active" data-group="all">全部</button>
+          <button class="filter-chip" data-group="云算力分发">云算力</button>
+          <button class="filter-chip" data-group="行业模型">行业模型</button>
+          <button class="filter-chip" data-group="办公创作">办公 SaaS</button>
+          <button class="filter-chip" data-group="行业SaaS">行业 SaaS</button>
+          <button class="filter-chip" data-group="C端平台">C 端平台</button>
+          <button class="filter-chip" data-group="机器人具身">机器人</button>
+
+          <span class="filter-label" style="margin-left:12px">阶段</span>
+          <button class="filter-chip is-active" data-stage="all">全部</button>
+          <button class="filter-chip" data-stage="L3">L3 规模盈利</button>
+          <button class="filter-chip" data-stage="L2">L2 早起商业</button>
+          <button class="filter-chip" data-stage="L1">L1 Pre-Rev</button>
+
+          <span class="filter-label" style="margin-left:12px">护城河</span>
+          <button class="filter-chip is-active" data-moat="all">全部</button>
+          <button class="filter-chip" data-moat="strong">强</button>
+          <button class="filter-chip" data-moat="medium">中</button>
+          <button class="filter-chip" data-moat="weak">弱</button>
+
+          <span class="filter-label" style="margin-left:12px">定价权</span>
+          <button class="filter-chip is-active" data-pricing="all">全部</button>
+          <button class="filter-chip" data-pricing="expanding">提价中</button>
+          <button class="filter-chip" data-pricing="flat">价格稳</button>
+          <button class="filter-chip" data-pricing="compressing">被压价</button>
+
+          <span class="filter-label" style="margin-left:12px">市场</span>
+          <button class="filter-chip is-active" data-market="all">全部</button>
+          <button class="filter-chip" data-market="A股">A股</button>
+          <button class="filter-chip" data-market="港股">港股</button>
+
+          <input type="text" class="filter-search" id="downstream-search" placeholder="搜索赛道 / 公司 / ticker..." />
+        </div>
+
+        <div class="upstream-table-wrap">
+          <table class="upstream-table">
+            <thead id="downstream-table-head">
+              <tr>
+                <th>组别</th>
+                <th class="sortable" data-sort="name">赛道</th>
+                <th class="sortable" data-sort="substage">阶段</th>
+                <th class="sortable" data-sort="moat">护城河</th>
+                <th class="sortable" data-sort="pricing">定价权</th>
+                <th class="sortable" data-sort="elasticity">弹性</th>
+                <th>市场</th>
+                <th>备注</th>
+              </tr>
+            </thead>
+            <tbody id="downstream-table-body"></tbody>
+          </table>
+        </div>
+
+        <p class="upstream-footnote" id="downstream-last-updated">
+          数据版本 — · 方法论文档见 <a href="docs/downstream-methodology.md" target="_blank" style="color:var(--amber)">downstream-methodology.md</a> ·
+          弹性系数 = DOL × PricingPower · 37 赛道 · 61 公司 · ⚠️ 估值代理节点（OpenAI* 等）未折算
+        </p>
+
+      </div><!-- #downstream-view -->
+
+    </main>
+
+  </div>
+
+  <script src="src/data.js"></script>
+  <script src="src/sankey.js"></script>
+  <script src="src/upstream.js"></script>
+  <script src="src/infra.js"></script>
+  <script src="src/model-platform.js"></script>
+  <script src="src/apps.js"></script>
+  <script src="src/embodied.js"></script>
+  <script src="src/filters.js"></script>
+  <script src="src/upstream-view.js"></script>
+  <script src="src/infra-view.js"></script>
+  <script src="src/model-platform-view.js"></script>
+  <script src="src/apps-view.js"></script>
+  <script src="src/embodied-view.js"></script>
+  <!-- downstream.js / downstream-view.js deprecated — kept on disk for reference -->
+  <script>window.initReport && window.initReport();</script>
+</body>
+</html>

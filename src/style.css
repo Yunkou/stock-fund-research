@@ -1,0 +1,574 @@
+/* src/style.css — 内部研究备忘录视觉语言
+   v0.5 桑基图为绝对主角，左侧细窄导览栏 */
+
+:root {
+  --bg:        #0B0D10;
+  --bg-elev:  #11151B;
+  --bg-card:  #151A21;
+  --line:     #1F262F;
+  --line-2:   #2A323D;
+  --ink:      #E8E6E1;
+  --ink-dim:  #8A8F98;
+  --ink-mute: #757B85;   /* bumped from #4A4F58 for WCAG AA 4.5:1 on #0B0D10 */
+
+  --amber:     #FF7A45;   /* US & Canada / L2 Chip */
+  --amber-2:   #E8956A;   /* Canada 单独 */
+  --crimson:   #E0567A;   /* Mainland China / L4 Model */
+  --slate:     #7BA7BC;   /* Europe / L3 Computing Infra */
+  --moss:      #9CC68B;   /* Taiwan / L5 Application */
+  --moss-2:    #B8DBA7;   /* South Korea */
+  --moss-3:    #CFE6BD;   /* Japan */
+  --ash:       #8A8F98;   /* Others / L1 Energy */
+
+  --rail-w:   180px;
+
+  --serif: 'Fraunces', 'Source Serif Pro', Georgia, serif;
+  --sans:  'Inter', -apple-system, 'Helvetica Neue', sans-serif;
+  --mono:  'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+}
+
+/* ===== 整体两栏 ==================================================== */
+.shell {
+  display: grid;
+  grid-template-columns: var(--rail-w) 1fr;
+  min-height: 100vh;
+}
+
+/* ===== 左侧细窄导览栏 ============================================= */
+.rail {
+  border-right: 1px solid var(--line);
+  padding: 22px 16px;
+  position: sticky; top: 0; align-self: start;
+  height: 100vh; overflow: auto;
+  background: var(--bg);
+}
+
+.rail-stamps {
+  display: flex; flex-direction: column; gap: 4px;
+  margin-bottom: 18px;
+}
+.stamp {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  border: 1px solid var(--line);
+  padding: 4px 6px;
+  display: inline-block;
+}
+
+.rail-eyebrow {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.22em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  margin: 18px 0 8px;
+}
+.rail-eyebrow:first-of-type { margin-top: 4px; }
+
+.rail-title {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin: 0 0 18px;
+  font-variation-settings: "opsz" 144, "SOFT" 50;
+}
+.rail-title em { font-style: italic; color: var(--amber); }
+
+.rail-hint {
+  display: block;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  margin-top: 2px;
+  font-weight: 400;
+}
+
+.rail-foot {
+  margin-top: 28px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--ink-mute);
+  letter-spacing: 0.06em;
+  line-height: 1.7;
+}
+.rail-foot a {
+  color: var(--ink-dim);
+  text-decoration: underline;
+  text-decoration-style: dotted;
+}
+
+/* control-group (vertical in rail) */
+.control-group {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.control-group button {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: var(--ink-dim);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 8px 10px;
+  cursor: pointer;
+  text-align: left;
+}
+.control-group:not(.vertical) button { border-right: 1px solid var(--line); }
+.control-group:not(.vertical) button:last-child { border-right: 0; }
+.control-group.vertical { flex-direction: column; width: 100%; }
+.control-group.vertical button { border-bottom: 1px solid var(--line); }
+.control-group.vertical button:last-child { border-bottom: 0; }
+.control-group button.is-active {
+  background: var(--ink);
+  color: var(--bg);
+}
+.control-group button:hover:not(.is-active) { color: var(--ink); }
+
+/* legend */
+.legend {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--ink-dim);
+  text-transform: uppercase;
+}
+.legend i {
+  width: 10px; height: 10px; display: inline-block; flex: 0 0 10px;
+}
+.legend-proxy {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px dashed var(--line);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--ink-dim);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: help;
+}
+.legend-proxy .proxy-glyph {
+  color: var(--ink);
+  font-size: 12px;
+  line-height: 1;
+}
+
+/* ===== 主区 ========================================================= */
+.main {
+  padding: 28px 36px 60px;
+  min-width: 0;     /* 关键：让 grid 子项可以缩 */
+}
+
+/* 顶部：标题 + KPI */
+.report-head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 28px;
+  align-items: end;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 16px;
+  margin-bottom: 14px;
+}
+.kicker {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  margin: 0;
+  font-variation-settings: "opsz" 144;
+}
+.title em { font-style: italic; color: var(--amber); }
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(110px, auto));
+  gap: 0;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+}
+.kpi {
+  padding: 10px 14px;
+  border-right: 1px solid var(--line);
+}
+.kpi:last-child { border-right: 0; }
+.kpi-label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.kpi-value {
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+}
+
+/* focus line */
+.focus-line {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-dim);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--line);
+}
+
+/* ===== 桑基图主舞台（绝对主角） ===================================== */
+.sankey-stage {
+  /* 占视口 ~78% 高度，外加一些余量留给下方双表 */
+  width: 100%;
+  height: 78vh;
+  min-height: 560px;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 39px, rgba(255,255,255,0.018) 39px 40px),
+    var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  overflow: visible;
+  position: relative;
+  margin-bottom: 28px;
+}
+/* svg 撑满整个 stage；viewBox 内部已经预留了左右标签区 */
+#sankey {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+#sankey .node { transition: opacity 200ms ease; cursor: pointer; }
+#sankey .node:hover { filter: brightness(1.25); }
+#sankey .link { transition: opacity 200ms ease, stroke-width 200ms ease; }
+
+/* 估值代理节点（未盈利，按一级市场估值折算）—— 虚线描边 + 降透明度 */
+#sankey .node.is-proxy { cursor: help; }
+#sankey .node.is-proxy:hover { filter: none; opacity: 0.95; }
+#sankey .link.is-proxy { cursor: help; }
+#sankey .lbl-name.is-proxy { fill: var(--ink-dim); font-style: italic; }
+#sankey .lbl-name.is-proxy::before { content: '▒ '; }
+#sankey .lbl-name {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  fill: var(--ink);
+  paint-order: stroke fill;
+  stroke: var(--bg);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  transition: opacity 200ms ease;
+}
+#sankey .lbl-name::before { content: attr(data-name); }
+#sankey .is-dim  { opacity: 0.12 !important; }
+#sankey .is-focus { opacity: 1 !important; }
+#sankey .node.is-focus { stroke: var(--ink); stroke-width: 1.5; }
+
+/* ===== 紧贴桑基：三条 observation 大字号 callout =================== */
+.observations {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin: 0 0 24px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(232,230,225,0.018), transparent);
+}
+.observations .obs {
+  padding: 18px 22px 18px 22px;
+  border-right: 1px solid var(--line);
+}
+.observations .obs:last-child { border-right: none; }
+.observations .obs-glyph {
+  display: flex; align-items: baseline; gap: 10px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.observations .obs-num { color: var(--amber); font-weight: 500; }
+.observations .obs-title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1.18;
+  color: var(--ink);
+  margin: 0 0 6px 0;
+  letter-spacing: -0.01em;
+}
+.observations .obs-body {
+  font-family: var(--sans);
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ink-dim);
+  margin: 0;
+}
+.observations .obs-body strong {
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+.observations .obs-body em {
+  color: var(--ink-dim);
+  font-style: italic;
+}
+@media (max-width: 1100px) {
+  .observations { grid-template-columns: 1fr; }
+  .observations .obs { border-right: none; border-bottom: 1px solid var(--line); }
+  .observations .obs:last-child { border-bottom: none; }
+}
+
+/* ===== 桑基图下方的双表 ============================================= */
+.below { margin-top: 0; }
+.tables {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 28px;
+  margin-bottom: 28px;
+}
+.t-block { min-width: 0; }
+.t-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+}
+.t-eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+}
+.t-hint {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--ink-mute);
+  letter-spacing: 0.08em;
+}
+
+.ledger-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 11.5px;
+}
+.ledger-table th, .ledger-table td {
+  border-bottom: 1px dashed var(--line);
+  padding: 6px 4px;
+  text-align: left;
+}
+.ledger-table th {
+  color: var(--ink-mute);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 9.5px;
+}
+.ledger-table td.num { text-align: right; color: var(--ink-dim); }
+.ledger-table td.name { color: var(--ink); }
+.ledger-table tbody tr:hover td { background: rgba(255, 122, 69, 0.04); }
+
+/* ===== 三段批注 ===================================================== */
+.notes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  border-top: 1px solid var(--line);
+  padding-top: 22px;
+}
+.notes article h3 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 17px;
+  margin: 0 0 6px;
+  letter-spacing: -0.01em;
+}
+.notes article p {
+  font-size: 13px;
+  color: var(--ink-dim);
+  margin: 0;
+}
+.notes article .glyph {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.notes article .num {
+  display: inline-block;
+  font-family: var(--mono);
+  color: var(--amber);
+  margin-right: 6px;
+}
+
+/* ===== 响应式 ======================================================= */
+@media (max-width: 1280px) {
+  .title { font-size: 30px; line-height: 1.05; }
+  .report-head { grid-template-columns: 1fr; align-items: start; }
+  .kpis { grid-template-columns: repeat(4, 1fr); margin-top: 12px; }
+  .kpis .kpi { border-right: 1px solid var(--line); }
+  .kpis .kpi:last-child { border-right: 0; }
+}
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .rail {
+    position: static;
+    height: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .main { padding: 22px 18px 40px; }
+  .title { font-size: 24px; }
+  .kpis { grid-template-columns: repeat(2, 1fr); margin-top: 12px; }
+  .kpis .kpi:nth-child(2) { border-right: 0; }
+  .kpis .kpi:nth-child(1),
+  .kpis .kpi:nth-child(2) { border-bottom: 1px solid var(--line); }
+  .kpis .kpi:nth-child(3),
+  .kpis .kpi:nth-child(4) { border-top: 1px solid var(--line); }
+  .kpis .kpi:nth-child(3) { border-left: 0; }
+  .tables { grid-template-columns: 1fr; }
+  .notes { grid-template-columns: 1fr; }
+  .sankey-stage { height: 70vh; min-height: 480px; }
+}
+
+/* ===== 桑基图过渡 & 工具提示 ========================================= */
+.sankey-stage.is-switching {
+  opacity: 0.45;
+  transition: opacity 280ms cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+/* 浮动工具提示 */
+.sankey-tooltip {
+  position: absolute;
+  pointer-events: none;
+  z-index: 100;
+  background: var(--bg-card);
+  border: 1px solid var(--line-2);
+  border-radius: 2px;
+  padding: 8px 12px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--ink);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 180ms ease, transform 180ms ease;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+.sankey-tooltip.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.sankey-tooltip .tt-name {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  margin-bottom: 2px;
+}
+.sankey-tooltip .tt-stat {
+  color: var(--ink-dim);
+  font-size: 10px;
+}
+.sankey-tooltip .tt-val {
+  color: var(--amber);
+}
+
+/* 键盘快捷键提示 (rail) */
+.kb-hints {
+  margin-top: 18px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  line-height: 1.8;
+}
+.kb-hints kbd {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 9px;
+  padding: 1px 5px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--bg-elev);
+  color: var(--ink-dim);
+  margin: 0 2px;
+}
+
+/* focus-line 动态状态 */
+.focus-line.is-active {
+  color: var(--amber);
+  border-bottom-color: var(--amber);
+}
+
+/* KPI 值过渡 */
+.kpi-value {
+  transition: color 280ms ease;
+}
+.kpi-value.is-updated {
+  color: var(--amber);
+}
+
+/* ===== prefers-reduced-motion ====================================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html, body { scroll-behavior: auto; }
+  .sankey-stage.is-switching { opacity: 1; transition: none; }
+  .sankey-tooltip { transition: none; }
+}
