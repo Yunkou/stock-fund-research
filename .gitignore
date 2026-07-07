@@ -31,3 +31,6 @@ yarn-error.log*
 *.orig
 # Cloudflare
 .wrangler/
+
+# vibe-trading scan cache
+.vibe-scan/

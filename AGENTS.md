@@ -243,6 +243,29 @@ node /tmp/shot-responsive.mjs  # 1600 / 1024 / 420 三档
 - `mismatches` 打印 `0`
 - 桌面截图 stage `1346 × 778`，左侧源标签和右侧公司标签全部可读
 
+### 7.1 外部数据交叉校验（vibe-trading-mcp · stdio）
+
+`vibe-trading-mcp`（本地 stdio 守护进程，路径 `vibe-trading-mcp`）可用作外部 sanity check。
+一键脚本：`scripts/mcp-crosscheck.py`（node sandbox 解析 data.js → JSON-RPC 拉 eastmoney 财务数据 → 渲染 markdown 报告）。
+
+```bash
+python3 scripts/mcp-crosscheck.py              # stdout 出报告
+python3 scripts/mcp-crosscheck.py --json out.json  # 同时落 JSON
+```
+
+最近一次产出：`docs/mcp-crosscheck-report.md`。
+
+**校验要点**：
+- 内部不变量（Σ=812、公司切分守恒、proxy 集合）必须 100% 通过，否则禁止改动 data.js。
+- 外部量级是 **量级合理性** 检查：data.js 是 2026E **业务线分配利润**，MCP 给的是已实现 op income / net profit（**报表口径**），对比时不要做等式，只看量级。
+- **已知盲区**：`.KS` / `.T` / `.TW` 原股走 auto source 会落到 tushare 但 token 未配置 → `_unresolved`，只能通过美股 ADR 覆盖。
+
+**MCP 已知工具（节选）**：
+- `get_market_data` — OHLCV；US/HK/A 股可用 auto，KR/JP/TW 用美股 ADR 替代
+- `get_financial_statements` — `income` / `balance` / `cashflow` / `indicators`，period=`annual|quarter`
+- `search_symbol` — 解析公司名 → ticker
+- `trading_quote` / `trading_history` — 仅在已配 trading connection 时可用
+
 ---
 
 ## 8. 已知坑 & 调试经验
