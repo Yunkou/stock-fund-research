@@ -20,7 +20,8 @@
   // ── 赛道分组 ─────────────────────────────────────────────
   const categoryGroups = Object.freeze([
     { id: '算力运营', zh: '算力运营', en: 'Compute Operations', tone: 'amber'    },
-    { id: '数字基建', zh: '数字基建', en: 'Digital Infrastructure', tone: 'slate'   }
+    { id: '数字基建', zh: '数字基建', en: 'Digital Infrastructure', tone: 'slate'   },
+    { id: '芯片与器件', zh: '芯片与器件', en: 'Chips & Components', tone: 'crimson' }
   ]);
 
   // 注：substage 在中游算力基础设施 = 「运营成熟度」：
@@ -94,6 +95,72 @@
       moat: 'medium', pricingPower: 'expanding',
       note: 'GB200 全液冷；英维克/曙光数创；风冷向冷板+浸没式切换',
       companies: ['co_i14', 'co_i15']
+    },
+
+    // ═══ 算力运营 — AI 服务器整机 ═══
+    ai_server: {
+      id: 'ai_server', name: 'AI 服务器 / 整机', group: '算力运营', substage: 'L3',
+      elasticity: 2.10,
+      currentOutput: { low: 30, high: 50, unit: '亿美元' },
+      target2030: { low: 100, high: 180, unit: '亿美元' },
+      moat: 'medium', pricingPower: 'flat',
+      note: '浪潮/工业富联/中科曙光；昇腾/GB200 服务器代工与品牌；毛利率 8-18%',
+      companies: ['co_i16', 'co_i17', 'co_i18']
+    },
+
+    // ═══ 芯片与器件 — 国产 AI 芯片 / CPU ═══
+    ai_chip: {
+      id: 'ai_chip', name: '国产 AI 芯片 / CPU', group: '芯片与器件', substage: 'L2',
+      elasticity: 3.10,
+      currentOutput: { low: 15, high: 25, unit: '亿美元' },
+      target2030: { low: 80, high: 140, unit: '亿美元' },
+      moat: 'strong', pricingPower: 'expanding',
+      note: '海光 DCU 对标 CUDA；寒武纪思元 590；国产替代政策强制采购',
+      companies: ['co_i19', 'co_i20']
+    },
+
+    // ═══ 芯片与器件 — 光芯片 / 光器件 ═══
+    optical_chip: {
+      id: 'optical_chip', name: '光芯片 / 光器件', group: '芯片与器件', substage: 'L2',
+      elasticity: 3.50,
+      currentOutput: { low: 5, high: 10, unit: '亿美元' },
+      target2030: { low: 25, high: 50, unit: '亿美元' },
+      moat: 'strong', pricingPower: 'expanding',
+      note: 'EML/VCSEL 激光器 + 无源器件；源杰/光迅/华工；硅光芯片从设计到量产',
+      companies: ['co_i21', 'co_i22', 'co_i23']
+    },
+
+    // ═══ 芯片与器件 — 存储 / 内存接口 ═══
+    storage_interface: {
+      id: 'storage_interface', name: '存储 / 内存接口芯片', group: '芯片与器件', substage: 'L3',
+      elasticity: 2.25,
+      currentOutput: { low: 12, high: 20, unit: '亿美元' },
+      target2030: { low: 40, high: 70, unit: '亿美元' },
+      moat: 'medium', pricingPower: 'expanding',
+      note: 'HBM/DDR5 升级周期 + AI 服务器超大内存需求；兆易/澜起受益',
+      companies: ['co_i24', 'co_i25']
+    },
+
+    // ═══ 芯片与器件 — 先进封装 ═══
+    advanced_pkg: {
+      id: 'advanced_pkg', name: '先进封装 (CoWoS/Chiplet)', group: '芯片与器件', substage: 'L3',
+      elasticity: 2.60,
+      currentOutput: { low: 8, high: 15, unit: '亿美元' },
+      target2030: { low: 35, high: 60, unit: '亿美元' },
+      moat: 'strong', pricingPower: 'expanding',
+      note: 'CoWoS/HBM 封装；长电/通富微电；AI 芯片卡脖子环节国产突破',
+      companies: ['co_i26', 'co_i27']
+    },
+
+    // ═══ 数字基建 — 高速 PCB / 封装基板 ═══
+    high_speed_pcb: {
+      id: 'high_speed_pcb', name: '高速 PCB / 封装基板', group: '数字基建', substage: 'L3',
+      elasticity: 2.15,
+      currentOutput: { low: 10, high: 18, unit: '亿美元' },
+      target2030: { low: 35, high: 60, unit: '亿美元' },
+      moat: 'medium', pricingPower: 'expanding',
+      note: '224G PAM4/PCIe 6.0 PCB + ABF 基板；深南/胜宏配套 GB200',
+      companies: ['co_i28', 'co_i29']
     }
   };
 
@@ -216,6 +283,114 @@
       substage: 'L3', categories: ['liquid_cooling'],
       financials: { fixedCostRatio: 0.45, aiRevenuePct: 0.85, dol: 1.92 },
       note: '中科曙光子公司；浸没式液冷领先；与字节/腾讯签长约'
+    },
+
+    // ═══════════════════════════════════════════════════════
+    // 算力运营 — AI 服务器 / 整机 (ai_server) L3
+    // ═══════════════════════════════════════════════════════
+    co_i16: {
+      id: 'co_i16', ticker: '000977.SZ', name: '浪潮信息', market: 'A股',
+      substage: 'L3', categories: ['ai_server'],
+      financials: { fixedCostRatio: 0.55, aiRevenuePct: 0.60, dol: 2.44 },
+      note: '国内 AI 服务器市占率第一；字节核心供应商；JDM 模式深度绑定互联网大厂'
+    },
+    co_i17: {
+      id: 'co_i17', ticker: '601138.SH', name: '工业富联', market: 'A股',
+      substage: 'L3', categories: ['ai_server'],
+      financials: { fixedCostRatio: 0.60, aiRevenuePct: 0.45, dol: 2.78 },
+      note: '全球 AI 服务器代工龙头；英伟达 GB200 核心合作方；云计算+边缘 AI 双线'
+    },
+    co_i18: {
+      id: 'co_i18', ticker: '603019.SH', name: '中科曙光', market: 'A股',
+      substage: 'L3', categories: ['ai_server'],
+      financials: { fixedCostRatio: 0.50, aiRevenuePct: 0.55, dol: 2.17 },
+      note: '国产超算龙头；液冷+服务器一体化；昇腾生态核心整机厂商'
+    },
+
+    // ═══════════════════════════════════════════════════════
+    // 芯片与器件 — 国产 AI 芯片 / CPU (ai_chip) L2
+    // ═══════════════════════════════════════════════════════
+    co_i19: {
+      id: 'co_i19', ticker: '688041.SH', name: '海光信息', market: 'A股',
+      substage: 'L2', categories: ['ai_chip'],
+      financials: { fixedCostRatio: 0.35, aiRevenuePct: 0.80, dol: 1.52 },
+      note: '国产 CPU+DCU 双龙头；深算系列兼容 CUDA 生态；信创+AI 双重红利'
+    },
+    co_i20: {
+      id: 'co_i20', ticker: '300474.SZ', name: '景嘉微', market: 'A股',
+      substage: 'L2', categories: ['ai_chip'],
+      financials: { fixedCostRatio: 0.40, aiRevenuePct: 0.70, dol: 1.72 },
+      note: '国产 GPU 龙头；边缘+军工双赛道；JM9 系列 AI 推理卡放量'
+    },
+
+    // ═══════════════════════════════════════════════════════
+    // 芯片与器件 — 光芯片 / 光器件 (optical_chip) L2
+    // ═══════════════════════════════════════════════════════
+    co_i21: {
+      id: 'co_i21', ticker: '688498.SH', name: '源杰科技', market: 'A股',
+      substage: 'L2', categories: ['optical_chip'],
+      financials: { fixedCostRatio: 0.35, aiRevenuePct: 0.90, dol: 1.52 },
+      note: '高端 EML 光芯片量产突破海外垄断；1.6T 光模块核心上游；YTD +258%'
+    },
+    co_i22: {
+      id: 'co_i22', ticker: '002281.SZ', name: '光迅科技', market: 'A股',
+      substage: 'L2', categories: ['optical_chip'],
+      financials: { fixedCostRatio: 0.45, aiRevenuePct: 0.75, dol: 1.92 },
+      note: '国产全产业链光器件龙头；1.6T NPO 独家验证；华为金牌供应商'
+    },
+    co_i23: {
+      id: 'co_i23', ticker: '000988.SZ', name: '华工科技', market: 'A股',
+      substage: 'L2', categories: ['optical_chip'],
+      financials: { fixedCostRatio: 0.50, aiRevenuePct: 0.55, dol: 2.17 },
+      note: '1.6T/3.2T 液冷光模块；激光+传感器跨领域布局'
+    },
+
+    // ═══════════════════════════════════════════════════════
+    // 芯片与器件 — 存储 / 内存接口 (storage_interface) L3
+    // ═══════════════════════════════════════════════════════
+    co_i24: {
+      id: 'co_i24', ticker: '603986.SH', name: '兆易创新', market: 'A股',
+      substage: 'L3', categories: ['storage_interface'],
+      financials: { fixedCostRatio: 0.40, aiRevenuePct: 0.50, dol: 1.72 },
+      note: 'NOR Flash 龙头 + DRAM 放量；端侧 AI+车规存储双驱动；YTD +179%'
+    },
+    co_i25: {
+      id: 'co_i25', ticker: '688008.SH', name: '澜起科技', market: 'A股',
+      substage: 'L3', categories: ['storage_interface'],
+      financials: { fixedCostRatio: 0.30, aiRevenuePct: 0.85, dol: 1.35 },
+      note: '内存接口芯片全球龙头；DDR5 RCD/MDB 独占份额；AI 服务器内存升级核心受益'
+    },
+
+    // ═══════════════════════════════════════════════════════
+    // 芯片与器件 — 先进封装 (advanced_pkg) L3
+    // ═══════════════════════════════════════════════════════
+    co_i26: {
+      id: 'co_i26', ticker: '600584.SH', name: '长电科技', market: 'A股',
+      substage: 'L3', categories: ['advanced_pkg'],
+      financials: { fixedCostRatio: 0.50, aiRevenuePct: 0.40, dol: 2.17 },
+      note: '全球封测前三；国内唯一 HBM 高端封装量产；Chiplet 平台化布局'
+    },
+    co_i27: {
+      id: 'co_i27', ticker: '002156.SZ', name: '通富微电', market: 'A股',
+      substage: 'L3', categories: ['advanced_pkg'],
+      financials: { fixedCostRatio: 0.55, aiRevenuePct: 0.50, dol: 2.44 },
+      note: 'AMD 全球核心封测合作伙伴；CoWoS+Chiplet 产能扩张；高弹性 AI 封测标的'
+    },
+
+    // ═══════════════════════════════════════════════════════
+    // 数字基建 — 高速 PCB / 封装基板 (high_speed_pcb) L3
+    // ═══════════════════════════════════════════════════════
+    co_i28: {
+      id: 'co_i28', ticker: '002916.SZ', name: '深南电路', market: 'A股',
+      substage: 'L3', categories: ['high_speed_pcb'],
+      financials: { fixedCostRatio: 0.50, aiRevenuePct: 0.60, dol: 2.17 },
+      note: '高端高速 PCB+ABF 封装基板龙头；112G/224G PAM4 PCB 批量交付'
+    },
+    co_i29: {
+      id: 'co_i29', ticker: '300476.SZ', name: '胜宏科技', market: 'A股',
+      substage: 'L3', categories: ['high_speed_pcb'],
+      financials: { fixedCostRatio: 0.55, aiRevenuePct: 0.65, dol: 2.44 },
+      note: 'AI 服务器 GPU 主板核心供应商；英伟达 GB200 PCB 配套'
     }
   };
 

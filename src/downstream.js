@@ -247,7 +247,7 @@
       target2030: { low: 40, high: 70, unit: '亿美元' },
       moat: 'weak', pricingPower: 'flat',
       note: '创新奇智/思谋/凌云光；视觉检测+设备预测性维护',
-      companies: ['co_d63']
+      companies: ['co_d63', 'co_d110']
     },
     security_ai: {
       id: 'security_ai', name: '网络安全 AI', group: '行业SaaS', substage: 'L3',
@@ -721,6 +721,12 @@
       substage: 'L2', categories: ['industrial_ai'],
       financials: { fixedCostRatio: 0.45, aiRevenuePct: 0.40, dol: 1.92 },
       note: '工业视觉+回流焊设备；半导体封装贴片'
+    },
+    co_d110: {
+      id: 'co_d110', ticker: '688777.SH', name: '中控技术', market: 'A股',
+      substage: 'L3', categories: ['industrial_ai'],
+      financials: { fixedCostRatio: 0.40, aiRevenuePct: 0.55, dol: 1.72 },
+      note: '工业 AI 龙头；流程工业自动化+DCS 市占率第一；AI+工业软件平台；YTD +109%'
     },
 
     // ═══════════════════════════════════════════════════════

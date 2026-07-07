@@ -74,6 +74,39 @@
       companies: []
     },
 
+    // ═══ 机器人 — 执行器 / 电机 ═══
+    robot_actuators: {
+      id: 'robot_actuators', name: '执行器 / 电机 / 传动', group: '机器人', substage: 'L2',
+      elasticity: 3.30,
+      currentOutput: { low: 8, high: 15, unit: '亿美元' },
+      target2030: { low: 35, high: 65, unit: '亿美元' },
+      moat: 'strong', pricingPower: 'expanding',
+      note: '鸣志电器（空心杯）/ 兆威机电（灵巧手）/ 中大力德（行星减速器）/ 汇川（伺服）',
+      companies: ['co_e15', 'co_e16', 'co_e17']
+    },
+
+    // ═══ 机器人 — 传感器 ═══
+    robot_sensors: {
+      id: 'robot_sensors', name: '机器人传感器 / 视觉', group: '机器人', substage: 'L2',
+      elasticity: 2.85,
+      currentOutput: { low: 3, high: 7, unit: '亿美元' },
+      target2030: { low: 20, high: 40, unit: '亿美元' },
+      moat: 'medium', pricingPower: 'expanding',
+      note: '奥比中光（3D 视觉）/ 华依科技（IMU）/ 汉威科技（姿态）；传感器用量 10-40 个/台',
+      companies: ['co_e18', 'co_e19']
+    },
+
+    // ═══ 机器人 — 热管理 / 关节模组 ═══
+    thermal_joint: {
+      id: 'thermal_joint', name: '热管理 / 关节模组总成', group: '机器人', substage: 'L2',
+      elasticity: 2.45,
+      currentOutput: { low: 10, high: 18, unit: '亿美元' },
+      target2030: { low: 40, high: 80, unit: '亿美元' },
+      moat: 'strong', pricingPower: 'expanding',
+      note: '三花智控（热管理+旋转关节）/ 拓普集团（线性执行器）；特斯拉 Optimus 核心 Tier1',
+      companies: ['co_e20', 'co_e21']
+    },
+
     // ═══ 智驾与硬件 (3) ═══
     auto_adas: {
       id: 'auto_adas', name: '智驾 / ADAS', group: '智驾与硬件', substage: 'L3',
@@ -216,6 +249,60 @@
       substage: 'L2', categories: ['smart_hardware'],
       financials: { fixedCostRatio: 0.35, aiRevenuePct: 0.80, dol: 1.54 },
       note: 'AI 耳机+智能音箱 SoC 配套；端侧 SoC 见 model-platform tab'
+    },
+
+    // ═══════════════════════════════════════════════════════
+    // 机器人 — 执行器 / 电机 / 传动 (robot_actuators) L2
+    // ═══════════════════════════════════════════════════════
+    co_e15: {
+      id: 'co_e15', ticker: '002896.SZ', name: '中大力德', market: 'A股',
+      substage: 'L2', categories: ['robot_actuators'],
+      financials: { fixedCostRatio: 0.50, aiRevenuePct: 0.55, dol: 2.17 },
+      note: 'RV/行星减速器；宇树重要供应商；机器人关节传动核心'
+    },
+    co_e16: {
+      id: 'co_e16', ticker: '603728.SH', name: '鸣志电器', market: 'A股',
+      substage: 'L2', categories: ['robot_actuators'],
+      financials: { fixedCostRatio: 0.40, aiRevenuePct: 0.60, dol: 1.72 },
+      note: '空心杯电机龙头；Optimus 灵巧手核心供应商；高精度微传动'
+    },
+    co_e17: {
+      id: 'co_e17', ticker: '003021.SZ', name: '兆威机电', market: 'A股',
+      substage: 'L2', categories: ['robot_actuators'],
+      financials: { fixedCostRatio: 0.45, aiRevenuePct: 0.50, dol: 1.92 },
+      note: '灵巧手微型传动系统；行星减速+齿轮箱一体化'
+    },
+
+    // ═══════════════════════════════════════════════════════
+    // 机器人 — 传感器 / 视觉 (robot_sensors) L2
+    // ═══════════════════════════════════════════════════════
+    co_e18: {
+      id: 'co_e18', ticker: '688322.SH', name: '奥比中光', market: 'A股',
+      substage: 'L2', categories: ['robot_sensors'],
+      financials: { fixedCostRatio: 0.45, aiRevenuePct: 0.70, dol: 1.92 },
+      note: '3D 视觉传感龙头；宇树主力供应商；人形机器人视觉感知核心；YTD +45%'
+    },
+    co_e19: {
+      id: 'co_e19', ticker: '688071.SH', name: '华依科技', market: 'A股',
+      substage: 'L2', categories: ['robot_sensors'],
+      financials: { fixedCostRatio: 0.50, aiRevenuePct: 0.45, dol: 2.17 },
+      note: '车规级 IMU 惯性测量单元；人形机器人专用 ARU8010 传感器；L3+ 智驾标配'
+    },
+
+    // ═══════════════════════════════════════════════════════
+    // 机器人 — 热管理 / 关节模组总成 (thermal_joint) L2
+    // ═══════════════════════════════════════════════════════
+    co_e20: {
+      id: 'co_e20', ticker: '002050.SZ', name: '三花智控', market: 'A股',
+      substage: 'L2', categories: ['thermal_joint'],
+      financials: { fixedCostRatio: 0.50, aiRevenuePct: 0.35, dol: 2.17 },
+      note: '热管理龙头+旋转关节模组；特斯拉 Optimus 核心 Tier1；从汽车热管理延伸至机器人'
+    },
+    co_e21: {
+      id: 'co_e21', ticker: '601689.SH', name: '拓普集团', market: 'A股',
+      substage: 'L2', categories: ['thermal_joint'],
+      financials: { fixedCostRatio: 0.55, aiRevenuePct: 0.30, dol: 2.44 },
+      note: '线性/旋转执行器总成；特斯拉 Optimus 机械关节配套；底盘+热管理+机器人三线'
     }
   };
 

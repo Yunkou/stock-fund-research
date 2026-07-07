@@ -82,7 +82,7 @@
       target2030: { low: 35, high: 60, unit: '亿美元' },
       moat: 'medium', pricingPower: 'expanding',
       note: '恒玄/瑞芯微/全志/晶晨；耳机/音箱/AI 眼镜 SoC',
-      companies: ['co_m10', 'co_m11', 'co_m12']
+      companies: ['co_m10', 'co_m11', 'co_m12', 'co_m16', 'co_m17', 'co_m18', 'co_m19']
     },
     coding_agent: {
       id: 'coding_agent', name: 'Coding Agent / DevOps', group: '端侧与工具', substage: 'L2',
@@ -101,6 +101,17 @@
       moat: 'medium', pricingPower: 'flat',
       note: '帆软/永洪；ChatBI 让业务人员自助取数',
       companies: ['co_m15']
+    },
+
+    // ═══ 端侧与工具 — 芯片 IP / 设计服务 ═══
+    chip_ip: {
+      id: 'chip_ip', name: '芯片 IP 授权 / 设计服务', group: '端侧与工具', substage: 'L2',
+      elasticity: 2.35,
+      currentOutput: { low: 4, high: 7, unit: '亿美元' },
+      target2030: { low: 18, high: 32, unit: '亿美元' },
+      moat: 'strong', pricingPower: 'expanding',
+      note: '芯原股份；GPU/NPU/VPU IP 全覆盖；Chiplet 设计平台',
+      companies: ['co_m20']
     }
   };
 
@@ -226,6 +237,44 @@
       substage: 'L2', categories: ['data_analytics'],
       financials: { fixedCostRatio: 0.50, aiRevenuePct: 0.35, dol: 2.17 },
       note: 'ChatBI+指标平台；金融/运营商企业级 BI 替代帆软'
+    },
+
+    // ═══════════════════════════════════════════════════════
+    // 端侧与工具 — 端侧 AI SoC (edge_soc) L2 — 补充标的
+    // ═══════════════════════════════════════════════════════
+    co_m16: {
+      id: 'co_m16', ticker: '300223.SZ', name: '北京君正', market: 'A股',
+      substage: 'L2', categories: ['edge_soc'],
+      financials: { fixedCostRatio: 0.40, aiRevenuePct: 0.55, dol: 1.72 },
+      note: '存储+SoC 双主线；安防/AIoT/OpenClaw 概念；端侧 AI 渗透加速；YTD +119%'
+    },
+    co_m17: {
+      id: 'co_m17', ticker: '301536.SZ', name: '星宸科技', market: 'A股',
+      substage: 'L2', categories: ['edge_soc'],
+      financials: { fixedCostRatio: 0.35, aiRevenuePct: 0.80, dol: 1.52 },
+      note: 'LPU 架构先行者；端侧 AI 推理芯片创新；战略投资元川微；Q1 营收 +49%'
+    },
+    co_m18: {
+      id: 'co_m18', ticker: '688099.SH', name: '晶晨股份', market: 'A股',
+      substage: 'L2', categories: ['edge_soc'],
+      financials: { fixedCostRatio: 0.45, aiRevenuePct: 0.60, dol: 1.92 },
+      note: '全球智能机顶盒/电视 SoC 龙头；6nm AI 芯片 2026E 出货 3000 万颗'
+    },
+    co_m19: {
+      id: 'co_m19', ticker: '688018.SH', name: '乐鑫科技', market: 'A股',
+      substage: 'L2', categories: ['edge_soc'],
+      financials: { fixedCostRatio: 0.35, aiRevenuePct: 0.70, dol: 1.52 },
+      note: 'IoT Wi-Fi MCU 龙头；ESP32 全球累计出货超 10 亿颗；开源生态护城河'
+    },
+
+    // ═══════════════════════════════════════════════════════
+    // 端侧与工具 — 芯片 IP / 设计服务 (chip_ip) L2
+    // ═══════════════════════════════════════════════════════
+    co_m20: {
+      id: 'co_m20', ticker: '688595.SH', name: '芯原股份', market: 'A股',
+      substage: 'L2', categories: ['chip_ip'],
+      financials: { fixedCostRatio: 0.40, aiRevenuePct: 0.75, dol: 1.72 },
+      note: '芯片 IP 授权+设计服务一站式平台；GPU/NPU/VPU IP 全覆盖；Chiplet 设计领先'
     }
   };
 
