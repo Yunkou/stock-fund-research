@@ -658,6 +658,7 @@
   <script src="src/model-platform.js"></script>
   <script src="src/apps.js"></script>
   <script src="src/embodied.js"></script>
+  <script src="src/ticker-link.js"></script>
   <script src="src/filters.js"></script>
   <script src="src/upstream-view.js"></script>
   <script src="src/infra-view.js"></script>
@@ -665,6 +666,9 @@
   <script src="src/apps-view.js"></script>
   <script src="src/embodied-view.js"></script>
   <!-- downstream.js / downstream-view.js deprecated — kept on disk for reference -->
-  <script>window.initReport && window.initReport();</script>
+  <script>
+    window.initReport && window.initReport();
+    window.initTickerContextMenu && window.initTickerContextMenu();
+  </script>
 </body>
 </html>

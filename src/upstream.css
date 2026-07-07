@@ -361,6 +361,7 @@
   color: var(--ink);
   text-decoration: none;
   border-bottom: 1px dotted var(--ink-dim);
+  cursor: pointer;
 }
 
 .ticker-link:hover {
@@ -586,5 +587,97 @@
   .view-tab {
     padding: 8px 10px;
     font-size: 9.5px;
+  }
+}
+
+/* ═══ Ticker Context Menu（雪球 / 东方财富 / 同花顺 三选一） ═══ */
+.ticker-context-menu {
+  position: fixed;
+  z-index: 9999;
+  min-width: 200px;
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 4px 0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink);
+}
+
+.ticker-context-menu[hidden] {
+  display: none;
+}
+
+.tcm-header {
+  padding: 6px 12px 4px;
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 4px;
+}
+
+.tcm-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 6px 12px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+  transition: background 120ms ease;
+}
+
+.tcm-item:hover:not(:disabled) {
+  background: rgba(255, 122, 69, 0.08);
+}
+
+.tcm-item.is-default {
+  border-left: 2px solid var(--amber);
+  padding-left: 10px;
+}
+
+.tcm-item:disabled {
+  color: var(--ink-mute);
+  cursor: not-allowed;
+}
+
+.tcm-default {
+  font-size: 8.5px;
+  color: var(--amber);
+  margin-left: 6px;
+  letter-spacing: 0.05em;
+}
+
+.tcm-host {
+  font-size: 9.5px;
+  color: var(--ink-mute);
+}
+
+.tcm-footer {
+  margin-top: 4px;
+  padding: 6px 12px 4px;
+  border-top: 1px solid var(--line);
+  font-size: 9px;
+  color: var(--ink-mute);
+  letter-spacing: 0.04em;
+}
+
+/* 移动端长按适配：菜单项更大，方便点 */
+@media (hover: none) and (pointer: coarse) {
+  .ticker-context-menu {
+    min-width: 240px;
+    font-size: 13px;
+  }
+  .tcm-item {
+    padding: 10px 14px;
+    font-size: 13.5px;
   }
 }

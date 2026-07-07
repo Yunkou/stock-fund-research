@@ -215,7 +215,12 @@
                     <h4>公司信息</h4>
                     <p>
                       <strong>${co.name}</strong> &nbsp; ${renderMarketBadge(co.market)} &nbsp; ${renderSubstageBadge(co.substage)}<br>
-                      <span class="ticker-link">${co.ticker}</span>
+                      <a class="ticker-link"
+     href="${window.tickerUrl('xueqiu', co.ticker) || '#'}"
+     data-ticker="${co.ticker}"
+     data-default-broker="xueqiu"
+     target="_blank" rel="noopener"
+     title="左键单击 → 雪球 · 右键 / 长按 → 选行情源">${co.ticker}</a>
                     </p>
                     ${co.note ? `<p style="margin-top:6px">${co.note}</p>` : ''}
                   </div>
