@@ -130,7 +130,7 @@
       ].filter(Boolean).join(' ');
 
       const tr = document.createElement('tr');
-      tr.className = 'cat-row';
+      tr.className = 'cat-row' + (state.expandedRow === catId ? ' is-expanded' : '');
       tr.dataset.catId = catId;
       tr.innerHTML = `
         <td>${renderGroupBadge(cat.group)}</td>
@@ -145,24 +145,56 @@
       tr.addEventListener('click', () => toggleExpand(catId));
       tbody.appendChild(tr);
 
+      // 展开行（与上游一致：三列 grid，公司信息 / DOL 杠杆 / 关联赛道）
       if (state.expandedRow === catId) {
-        cos.forEach(co => {
-          const coTr = document.createElement('tr');
-          coTr.className = 'expanded-row';
-          coTr.innerHTML = `
-            <td></td><td colspan="7">
-              <div class="expanded-detail">
-                <span class="co-ticker">${co.ticker}</span>
-                <span class="co-name">${co.name}</span>
-                ${renderMarketBadge(co.market)}
-                ${renderSubstageBadge(co.substage)}
-                <span class="co-financials">固成比 ${(co.financials.fixedCostRatio * 100).toFixed(0)}% · AI营收 ${(co.financials.aiRevenuePct * 100).toFixed(0)}% · DOL ${co.financials.dol.toFixed(2)}</span>
-                <span class="co-note">${co.note || ''}</span>
-              </div>
-            </td>
-          `;
-          tbody.appendChild(coTr);
-        });
+        if (cos.length === 0) {
+          const emptyTr = document.createElement('tr');
+          emptyTr.className = 'expand-row';
+          emptyTr.innerHTML = '<td colspan="8"><div class="expand-detail"><p>暂无已映射公司。待 Vibe-Trading 筛选数据填充。</p></div></td>';
+          tbody.appendChild(emptyTr);
+        } else {
+          cos.forEach(co => {
+            const dol = co.financials?.dol ?? null;
+            const fixedRatio = co.financials?.fixedCostRatio ?? null;
+            const aiPct = co.financials?.aiRevenuePct ?? null;
+            const relatedCats = (co.categories || [])
+              .map(cid => categories[cid])
+              .filter(Boolean)
+              .map(c => `<span class="upstream-badge substage-badge ${c.substage}" data-cat="${c.id}">${c.name}</span>`)
+              .join('');
+            const coTr = document.createElement('tr');
+            coTr.className = 'expand-row';
+            coTr.innerHTML = `
+              <td colspan="8">
+                <div class="expand-detail">
+                  <div>
+                    <h4>公司信息</h4>
+                    <p>
+                      <strong>${co.name}</strong> &nbsp; ${renderMarketBadge(co.market)} &nbsp; ${renderSubstageBadge(co.substage)}<br>
+                      <span class="ticker-link">${co.ticker}</span>
+                    </p>
+                    ${co.note ? `<p style="margin-top:6px">${co.note}</p>` : ''}
+                  </div>
+                  <div>
+                    <h4>DOL 经营杠杆分解</h4>
+                    <div class="dol-breakdown">
+                      ${dol !== null ? `
+                        DOL = 1 + (固定成本/EBIT) = <strong>${dol.toFixed(2)}x</strong><br>
+                        <span>固定成本占比: ${fixedRatio !== null ? (fixedRatio * 100).toFixed(0) + '%' : '—'}</span><br>
+                        <span>AI 营收占比: ${aiPct !== null ? (aiPct * 100).toFixed(0) + '%' : '—'}</span>
+                      ` : '<span class="elasticity-na">财务数据待填充</span>'}
+                    </div>
+                  </div>
+                  <div>
+                    <h4>关联赛道 (${(co.categories || []).length})</h4>
+                    <div class="related-cats">${relatedCats || '<span class="elasticity-na">无</span>'}</div>
+                  </div>
+                </div>
+              </td>
+            `;
+            tbody.appendChild(coTr);
+          });
+        }
       }
     });
 
