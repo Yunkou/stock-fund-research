@@ -34,3 +34,7 @@ yarn-error.log*
 
 # vibe-trading scan cache
 .vibe-scan/
+
+# Weekly report rendered artifacts (keep .md tracked, ignore binary exports)
+reports/weekly-*.html
+reports/weekly-*.pdf
