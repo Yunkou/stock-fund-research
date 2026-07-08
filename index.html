@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="src/style.css" />
   <link rel="stylesheet" href="src/upstream.css" />
+  <link rel="stylesheet" href="src/weekly.css" />
 </head>
 <body>
   <div class="shell">
@@ -84,6 +85,7 @@
         <button class="view-tab" data-page="model-platform">中游·模型平台</button>
         <button class="view-tab" data-page="apps">下游·应用服务</button>
         <button class="view-tab" data-page="embodied">终端·具身硬件</button>
+        <button class="view-tab" data-page="weekly">周报 · 投资建议</button>
       </nav>
 
       <!-- ══════ Sankey 视图 ══════ -->
@@ -563,6 +565,9 @@
 
       </div><!-- #embodied-view -->
 
+      <!-- ══════ 周报 视图 ══════ -->
+      <div id="weekly-view" hidden></div><!-- #weekly-view -->
+
       <!-- ══════ 下游应用链视图（已废弃，保留参考） ══════ -->
       <div id="downstream-view" hidden>
 
@@ -665,6 +670,8 @@
   <script src="src/model-platform-view.js"></script>
   <script src="src/apps-view.js"></script>
   <script src="src/embodied-view.js"></script>
+  <script src="src/weekly-data.js"></script>
+  <script type="module" src="src/weekly.js"></script>
   <!-- downstream.js / downstream-view.js deprecated — kept on disk for reference -->
   <script>
     window.initReport && window.initReport();

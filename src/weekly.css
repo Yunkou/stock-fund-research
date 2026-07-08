@@ -1,0 +1,883 @@
+/* ============================================================
+   src/weekly.css — 周报视图样式
+   复用 src/style.css 的设计 token；作用域限定在 #weekly-view
+   ============================================================ */
+
+/* ═══ View container ═══ */
+#weekly-view {
+  /* 隐藏由 [hidden] / display:none 切换 */
+  max-width: 1480px;
+}
+
+/* 标题区 */
+.weekly-head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 28px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 18px;
+  margin-bottom: 28px;
+}
+.weekly-head__kicker {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 6px;
+}
+.weekly-head__title {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 38px;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin: 0;
+  font-variation-settings: "opsz" 144, "SOFT" 50;
+}
+.weekly-head__title em {
+  font-style: italic;
+  color: var(--amber);
+  font-weight: 500;
+}
+.weekly-head__sub {
+  font-family: var(--sans);
+  font-size: 13.5px;
+  color: var(--ink-dim);
+  margin-top: 8px;
+  line-height: 1.5;
+}
+.weekly-head__meta {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  letter-spacing: 0.04em;
+  text-align: right;
+  line-height: 1.7;
+}
+.weekly-head__meta b {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* ═══ Hero KPI strip — 4 单元 ═══ */
+.weekly-kpi {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid var(--line);
+  margin-bottom: 36px;
+  background: var(--bg-elev);
+}
+.weekly-kpi__cell {
+  padding: 14px 18px;
+  border-right: 1px solid var(--line);
+  min-width: 0;
+}
+.weekly-kpi__cell:last-child { border-right: 0; }
+.weekly-kpi__k {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 6px;
+}
+.weekly-kpi__v {
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+.weekly-kpi__v.is-amber   { color: var(--amber); }
+.weekly-kpi__v.is-crimson { color: var(--crimson); }
+.weekly-kpi__v.is-moss    { color: var(--moss); }
+.weekly-kpi__v.is-slate   { color: var(--slate); }
+.weekly-kpi__sub {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-dim);
+  margin-top: 4px;
+}
+@media (max-width: 900px) {
+  .weekly-kpi { grid-template-columns: repeat(2, 1fr); }
+  .weekly-kpi__cell:nth-child(2) { border-right: 0; }
+  .weekly-kpi__cell:nth-child(1), .weekly-kpi__cell:nth-child(2) {
+    border-bottom: 1px solid var(--line);
+  }
+}
+
+/* ═══ Section heading (SERIF) ═══ */
+.weekly-section {
+  margin-top: 56px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+}
+.weekly-section:first-of-type {
+  border-top: 0;
+  margin-top: 32px;
+  padding-top: 0;
+}
+.weekly-section__head {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+.weekly-section__num {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  color: var(--amber);
+  text-transform: uppercase;
+}
+.weekly-section__title {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 26px;
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin: 0;
+  font-variation-settings: "opsz" 144, "SOFT" 50;
+}
+.weekly-section__title em {
+  font-style: italic;
+  color: var(--amber);
+  font-weight: 500;
+}
+.weekly-section__kicker {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-dim);
+  letter-spacing: 0.06em;
+}
+
+/* ═══ Three observation callout (签名) ═══ */
+.weekly-observations {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border: 1px solid var(--line);
+  margin: 24px 0 36px;
+  background: var(--bg-elev);
+}
+.weekly-obs {
+  padding: 18px 20px;
+  border-right: 1px solid var(--line);
+  position: relative;
+}
+.weekly-obs:last-child { border-right: 0; }
+.weekly-obs__num {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  color: var(--amber);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.weekly-obs__title {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.3;
+  color: var(--ink);
+  margin: 0 0 8px;
+}
+.weekly-obs__body {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--ink-dim);
+  margin: 0;
+}
+.weekly-obs__body b {
+  color: var(--ink);
+  font-weight: 500;
+}
+@media (max-width: 900px) {
+  .weekly-observations { grid-template-columns: 1fr; }
+  .weekly-obs { border-right: 0; border-bottom: 1px solid var(--line); }
+  .weekly-obs:last-child { border-bottom: 0; }
+}
+
+/* ═══ Beats timeline (周事件) ═══ */
+.weekly-beats {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin: 0 0 16px;
+}
+.weekly-beat {
+  border: 1px solid var(--line);
+  background: var(--bg-elev);
+  padding: 12px 12px 14px;
+  min-width: 0;
+  border-top: 2px solid var(--line-2);
+  position: relative;
+  transition: transform 200ms ease;
+}
+.weekly-beat:hover { transform: translateY(-2px); }
+.weekly-beat.is-hot  { border-top-color: var(--amber);  }
+.weekly-beat.is-up   { border-top-color: var(--moss);   }
+.weekly-beat.is-down { border-top-color: var(--crimson); }
+.weekly-beat__date {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--ink-mute);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.weekly-beat__date b {
+  color: var(--ink);
+  font-weight: 500;
+}
+.weekly-beat__tone {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 1px 5px;
+  border: 1px solid currentColor;
+  margin-bottom: 6px;
+  color: var(--ink-dim);
+}
+.weekly-beat.is-hot  .weekly-beat__tone { color: var(--amber); }
+.weekly-beat.is-up   .weekly-beat__tone { color: var(--moss); }
+.weekly-beat.is-down .weekly-beat__tone { color: var(--crimson); }
+.weekly-beat__text {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink);
+  margin: 0;
+}
+@media (max-width: 1100px) {
+  .weekly-beats { grid-template-columns: repeat(4, 1fr); }
+  .weekly-beat:nth-child(5) { margin-top: 4px; }
+}
+@media (max-width: 700px) {
+  .weekly-beats { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ═══ Catalysts table — 紧凑事件流 ═══ */
+.weekly-catalysts {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.weekly-catalysts thead th {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  text-align: left;
+  padding: 9px 14px;
+  background: var(--bg-elev);
+  border-bottom: 1px solid var(--line-2);
+}
+.weekly-catalysts tbody td {
+  padding: 9px 14px;
+  border-bottom: 1px dashed var(--line);
+  vertical-align: top;
+}
+.weekly-catalysts tbody tr:last-child td { border-bottom: 0; }
+.weekly-catalysts tbody tr:hover td { background: rgba(255, 122, 69, 0.03); }
+.weekly-catalysts .cat-dir {
+  font-family: var(--mono);
+  font-size: 11px;
+  text-align: center;
+  width: 80px;
+}
+.weekly-catalysts .cat-dir.is-up      { color: var(--moss); }
+.weekly-catalysts .cat-dir.is-down    { color: var(--crimson); }
+.weekly-catalysts .cat-dir.is-neutral { color: var(--ink-mute); }
+.weekly-catalysts .cat-date {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--ink-dim);
+  width: 100px;
+  white-space: nowrap;
+}
+
+/* ═══ Mermaid diagram container ═══ */
+.weekly-mermaid {
+  margin: 18px 0 8px;
+  border: 1px solid var(--line);
+  background: var(--bg-elev);
+  padding: 24px 20px 16px;
+  overflow-x: auto;
+}
+.weekly-mermaid__cap {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 8px;
+  text-align: center;
+}
+.weekly-mermaid svg {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+}
+.weekly-mermaid.is-err {
+  border-color: var(--crimson);
+  background: rgba(224, 86, 122, 0.05);
+  color: var(--crimson);
+  font-family: var(--mono);
+  font-size: 12px;
+  white-space: pre-wrap;
+  padding: 16px;
+}
+
+/* ═══ Sector grid (分层两周期表现) ═══ */
+.weekly-sectors {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 0;
+}
+.weekly-sector {
+  border: 1px solid var(--line);
+  background: var(--bg-elev);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.weekly-sector__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  gap: 8px;
+}
+.weekly-sector__name {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 1.3;
+  color: var(--ink);
+  margin: 0;
+}
+.weekly-sector__name em {
+  font-style: normal;
+  margin-right: 4px;
+}
+.weekly-sector__count {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.weekly-sector__summary {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink-dim);
+  margin: 0 0 12px;
+}
+.weekly-sector__summary b { color: var(--ink); font-weight: 500; }
+
+/* mini bar list inside sector card */
+.weekly-sector__bars {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: auto;
+}
+.weekly-bar {
+  display: grid;
+  grid-template-columns: 1fr 56px;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.3;
+}
+.weekly-bar__name {
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.weekly-bar__name b {
+  color: var(--ink-mute);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 400;
+  margin-left: 4px;
+}
+.weekly-bar__pct {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  font-size: 11.5px;
+  font-weight: 500;
+}
+.weekly-bar__pct.is-up   { color: var(--moss); }
+.weekly-bar__pct.is-down { color: var(--crimson); }
+.weekly-bar__pct.is-hot  { color: var(--amber); font-weight: 600; }
+.weekly-bar__pct.is-neu  { color: var(--ash); }
+
+@media (max-width: 1100px) { .weekly-sectors { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 700px)  { .weekly-sectors { grid-template-columns: 1fr; } }
+
+/* ═══ Deep-dive card grid ═══ */
+.weekly-deepdives {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin: 0;
+}
+.weekly-dive {
+  border: 1px solid var(--line);
+  background: var(--bg-elev);
+  padding: 18px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  position: relative;
+}
+.weekly-dive.is-ok      { border-left: 3px solid var(--moss); }
+.weekly-dive.is-warn    { border-left: 3px solid var(--crimson); }
+.weekly-dive.is-caution { border-left: 3px solid var(--amber); }
+.weekly-dive.is-mixed   { border-left: 3px solid var(--slate); }
+.weekly-dive.is-up      { border-left: 3px solid var(--moss); }
+.weekly-dive.is-down    { border-left: 3px solid var(--crimson); }
+.weekly-dive.is-hot     { border-left: 3px solid var(--amber); }
+.weekly-dive.is-no      { border-left: 3px solid var(--crimson); }
+
+.weekly-dive__head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.weekly-dive__name {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 1.3;
+  color: var(--ink);
+  margin: 0;
+}
+.weekly-dive__name b {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--amber);
+  font-weight: 500;
+  margin-left: 6px;
+  letter-spacing: 0.04em;
+}
+.weekly-dive__emblem {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-dim);
+  letter-spacing: 0.04em;
+  text-align: right;
+  white-space: nowrap;
+}
+.weekly-dive__tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border: 1px solid var(--line);
+  color: var(--ink-dim);
+  margin-bottom: 8px;
+}
+.weekly-dive__tag.is-ok      { color: var(--moss);    border-color: rgba(156, 198, 139, 0.4); }
+.weekly-dive__tag.is-warn    { color: var(--crimson); border-color: rgba(224, 86, 122, 0.4); }
+.weekly-dive__tag.is-caution { color: var(--amber);   border-color: rgba(255, 122, 69, 0.5); }
+.weekly-dive__tag.is-mixed   { color: var(--slate);   border-color: rgba(123, 167, 188, 0.4); }
+.weekly-dive__tag.is-up      { color: var(--moss);    border-color: rgba(156, 198, 139, 0.4); }
+.weekly-dive__tag.is-down    { color: var(--crimson); border-color: rgba(224, 86, 122, 0.4); }
+.weekly-dive__tag.is-hot     { color: var(--amber);   border-color: rgba(255, 122, 69, 0.5); }
+.weekly-dive__tag.is-no      { color: var(--crimson); border-color: rgba(224, 86, 122, 0.4); }
+
+/* mini fact table inside card */
+.weekly-dive__facts {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 12px;
+  line-height: 1.45;
+  margin-bottom: 12px;
+}
+.weekly-dive__facts th,
+.weekly-dive__facts td {
+  padding: 5px 8px;
+  text-align: right;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+.weekly-dive__facts th:first-child,
+.weekly-dive__facts td:first-child {
+  text-align: left;
+  font-family: var(--sans);
+  color: var(--ink);
+}
+.weekly-dive__facts th {
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  border-bottom: 1px solid var(--line);
+  font-weight: 500;
+}
+.weekly-dive__facts td {
+  border-bottom: 1px dashed var(--line);
+  color: var(--ink-dim);
+}
+.weekly-dive__facts td.delta-up   { color: var(--moss); }
+.weekly-dive__facts td.delta-down { color: var(--crimson); }
+.weekly-dive__facts td.delta-hot  { color: var(--amber); font-weight: 500; }
+
+/* call/verdict block at bottom of card */
+.weekly-dive__call {
+  border-top: 1px dashed var(--line);
+  margin-top: auto;
+  padding-top: 10px;
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 4px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.weekly-dive__call dt {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  align-self: center;
+}
+.weekly-dive__call dd {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--sans);
+}
+.weekly-dive__call dd b { color: var(--ink); font-weight: 500; }
+.weekly-dive__call .verdict {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+.weekly-dive__call .verdict.is-ok      { color: var(--moss); }
+.weekly-dive__call .verdict.is-warn    { color: var(--crimson); }
+.weekly-dive__call .verdict.is-caution { color: var(--amber); }
+.weekly-dive__call .verdict.is-no      { color: var(--crimson); }
+
+@media (max-width: 1100px) { .weekly-deepdives { grid-template-columns: 1fr; } }
+
+/* ═══ Swarm 4-agent verdict (within deep-dive card) ═══ */
+.weekly-swarm {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border: 1px solid var(--line);
+  margin-bottom: 12px;
+  background: var(--bg);
+}
+.weekly-swarm__cell {
+  padding: 8px 10px;
+  border-right: 1px solid var(--line);
+  min-width: 0;
+}
+.weekly-swarm__cell:last-child { border-right: 0; }
+.weekly-swarm__name {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 3px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.weekly-swarm__name b {
+  color: var(--ink);
+  font-weight: 500;
+}
+.weekly-swarm__rel {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--amber);
+}
+.weekly-swarm__verdict {
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--ink);
+  margin: 0;
+}
+
+/* ═══ Recommendation (仓位) ═══ */
+.weekly-rec {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 16px;
+  margin: 0;
+}
+.weekly-rec__col {
+  border: 1px solid var(--line);
+  background: var(--bg-elev);
+  padding: 14px 16px 16px;
+  min-width: 0;
+}
+.weekly-rec__col h4 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 10px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.weekly-rec__col h4 .dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+}
+.weekly-rec__col.is-long h4 .dot  { background: var(--moss); }
+.weekly-rec__col.is-avoid h4 .dot { background: var(--crimson); }
+
+.weekly-rec-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--line);
+}
+.weekly-rec-row:last-child { border-bottom: 0; }
+.weekly-rec-row__name {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.35;
+}
+.weekly-rec-row__name b {
+  color: var(--amber);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  margin-left: 4px;
+}
+.weekly-rec-row__tldr {
+  font-size: 11.5px;
+  color: var(--ink-dim);
+  line-height: 1.45;
+  margin: 2px 0 0;
+}
+.weekly-rec-row__tag {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  padding: 2px 6px;
+  border: 1px solid var(--line);
+  color: var(--ink-dim);
+  white-space: nowrap;
+  align-self: start;
+}
+.weekly-rec-row__tag.is-ok   { color: var(--moss);    border-color: rgba(156, 198, 139, 0.4); }
+.weekly-rec-row__tag.is-warn { color: var(--crimson); border-color: rgba(224, 86, 122, 0.4); }
+.weekly-rec-row__tag.is-hot  { color: var(--amber);   border-color: rgba(255, 122, 69, 0.5); }
+
+.weekly-rec-row__weight {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+.weekly-rec-row__weight small {
+  color: var(--ink-mute);
+  font-size: 9.5px;
+  font-weight: 400;
+  margin-left: 2px;
+  letter-spacing: 0.06em;
+}
+.weekly-rec-row__stars {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--amber);
+  margin-right: 4px;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) { .weekly-rec { grid-template-columns: 1fr; } }
+
+/* ═══ Risk list ═══ */
+.weekly-risks {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+  border: 1px solid var(--line);
+  background: var(--bg-elev);
+  margin: 0;
+}
+.weekly-risk {
+  padding: 12px 16px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 8px 1fr;
+  gap: 10px;
+  align-items: start;
+}
+.weekly-risk:nth-child(2n) { border-right: 0; }
+.weekly-risk:nth-last-child(-n+2) { border-bottom: 0; }
+.weekly-risk__bar {
+  width: 4px;
+  align-self: stretch;
+  border-radius: 2px;
+  margin-top: 2px;
+}
+.weekly-risk.is-high .weekly-risk__bar { background: var(--crimson); }
+.weekly-risk.is-mid  .weekly-risk__bar { background: var(--amber); }
+.weekly-risk__head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.weekly-risk__tag {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--ink);
+}
+.weekly-risk__level {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding: 1px 5px;
+  border: 1px solid currentColor;
+}
+.weekly-risk.is-high .weekly-risk__level { color: var(--crimson); }
+.weekly-risk.is-mid  .weekly-risk__level { color: var(--amber); }
+.weekly-risk__detail {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-dim);
+  margin: 0;
+}
+@media (max-width: 700px) {
+  .weekly-risks { grid-template-columns: 1fr; }
+  .weekly-risk { border-right: 0; }
+  .weekly-risk:nth-child(n) { border-bottom: 1px solid var(--line); }
+  .weekly-risk:last-child { border-bottom: 0; }
+}
+
+/* ═══ Coverage grid (附录) ═══ */
+.weekly-cov {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin: 0;
+}
+.weekly-cov__col {
+  border: 1px solid var(--line);
+  background: var(--bg-elev);
+  padding: 14px 16px;
+  min-width: 0;
+}
+.weekly-cov__col h5 {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 8px;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.weekly-cov__col h5 b {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 15px;
+  color: var(--ink);
+  letter-spacing: 0;
+  text-transform: none;
+}
+.weekly-cov__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  line-height: 1.7;
+  color: var(--ink-dim);
+}
+.weekly-cov__list li b {
+  color: var(--amber);
+  font-weight: 500;
+  margin-right: 4px;
+}
+.weekly-cov__more {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-mute);
+  margin-top: 6px;
+  letter-spacing: 0.04em;
+}
+@media (max-width: 1100px) { .weekly-cov { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 700px)  { .weekly-cov { grid-template-columns: repeat(2, 1fr); } }
+
+/* ═══ Footer ═══ */
+.weekly-foot {
+  margin-top: 56px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  letter-spacing: 0.04em;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ═══ Small responsive tweaks ═══ */
+@media (max-width: 1100px) {
+  .weekly-head { grid-template-columns: 1fr; }
+  .weekly-head__meta { text-align: left; }
+  .weekly-head__title { font-size: 30px; }
+  .weekly-swarm { grid-template-columns: repeat(2, 1fr); }
+  .weekly-swarm__cell:nth-child(2) { border-right: 0; }
+  .weekly-swarm__cell:nth-child(1),
+  .weekly-swarm__cell:nth-child(2) { border-bottom: 1px solid var(--line); }
+}

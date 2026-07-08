@@ -14,7 +14,7 @@
   const STORAGE_KEY = 'ai-profit-sankey-prefs';
   const VALID_VIEWS = ['geo', 'layer'];
   const VALID_TOPNS = [30, 12, 8, 5, 0];
-  const VALID_PAGES = ['sankey', 'upstream', 'infra', 'model-platform', 'apps', 'embodied'];
+  const VALID_PAGES = ['sankey', 'upstream', 'infra', 'model-platform', 'apps', 'embodied', 'weekly'];
 
   // ---- 从 localStorage 恢复偏好（含 schema 校验）----
   function loadPrefs() {
@@ -284,7 +284,7 @@
     state.page = page;
 
     // 隐藏所有视图
-    ['sankey', 'upstream', 'infra', 'model-platform', 'apps', 'embodied'].forEach(function(p) {
+    ['sankey', 'upstream', 'infra', 'model-platform', 'apps', 'embodied', 'weekly'].forEach(function(p) {
       var el = document.getElementById(p + '-view');
       if (el) el.hidden = (page !== p);
     });
@@ -300,7 +300,8 @@
       'infra':          { fn: window.initInfraView,          flag: '_infraInitialized' },
       'model-platform': { fn: window.initModelPlatformView,  flag: '_modelPlatformInitialized' },
       'apps':           { fn: window.initAppsView,           flag: '_appsInitialized' },
-      'embodied':       { fn: window.initEmbodiedView,       flag: '_embodiedInitialized' }
+      'embodied':       { fn: window.initEmbodiedView,       flag: '_embodiedInitialized' },
+      'weekly':         { fn: window.initWeeklyView,         flag: '_weeklyInitialized' }
     };
     var target = initMap[page];
     if (target && target.fn) {
