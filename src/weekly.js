@@ -614,9 +614,9 @@
     return s;
   }
 
-  // ============== 挂载入口（多期追加） ==============
-  // 周报视图按时间倒序渲染所有期数：最新在上，最早在下。
-  // 每期是一个独立 section（issue-stamp 锚点 + 周期间隔线）。
+  // ============== 挂载入口（子 tab 切换） ==============
+  // 周报视图顶部显示子 tab 栏，每个 issue 一个 tab；默认选中最新一期。
+  // 仅渲染当前选中 issue 的内容，切换时按需懒渲染。
   function initWeeklyView() {
     const view = document.getElementById('weekly-view');
     if (!view) return;
@@ -628,26 +628,67 @@
     }
     view.innerHTML = '';
 
-    // 按时间倒序排序（最新在最上面）
+    // 按时间倒序排序（最新在最上面 / 第一个 tab）
     const issues = Object.keys(REPORTS).sort().reverse();
+
+    // ── 子 tab 栏 ──
+    const tabBar = el('div', { class: 'weekly-subtabs' });
+
+    // ── 内容区（每个 issue 一个容器，仅 active 可见） ──
+    const contentArea = el('div', { class: 'weekly-content' });
+    var rendered = {};     // issue → bool（是否已渲染）
+    var containers = {};   // issue → DOM wrapper
+
     issues.forEach(function (issue, idx) {
-      const D = REPORTS[issue];
-      // 每期包一层 section，加 issue stamp + 间隔线
-      const wrap = el('div', { class: 'weekly-issue', 'data-issue': issue });
-      // 期号 banner
-      const banner = el('div', { class: 'weekly-issue__banner' });
-      banner.appendChild(el('span', { class: 'weekly-issue__tag', text: 'ISSUE ' + (idx + 1) + ' / ' + issues.length + ' · 最新' }));
-      banner.appendChild(el('span', { class: 'weekly-issue__date', text: issue + ' · ' + (D.meta && D.meta.period ? D.meta.period : '') }));
-      if (idx > 0) banner.appendChild(el('span', { class: 'weekly-issue__sep', text: '↑ 上方为更早期报' }));
-      wrap.appendChild(banner);
-      // 渲染主体
-      try {
-        wrap.appendChild(buildView(D));
-      } catch (e) {
-        wrap.appendChild(el('pre', { class: 'weekly-issue__err', text: '⚠ 渲染 ' + issue + ' 失败：\n' + (e && e.message ? e.message : e) }));
-      }
-      view.appendChild(wrap);
+      var D = REPORTS[issue];
+      var period = D.meta && D.meta.period ? D.meta.period : issue;
+      var isActive = idx === 0;
+
+      // --- 子 tab 按钮 ---
+      var tab = el('button', {
+        class: 'weekly-subtab' + (isActive ? ' is-active' : ''),
+        'data-issue': issue
+      });
+      tab.appendChild(el('span', { class: 'weekly-subtab__date', text: issue }));
+      tab.appendChild(el('span', { class: 'weekly-subtab__period', text: period }));
+      tab.addEventListener('click', function () {
+        if (tab.classList.contains('is-active')) return;
+        // 切换激活态
+        tabBar.querySelectorAll('.weekly-subtab').forEach(function (t) { t.classList.remove('is-active'); });
+        tab.classList.add('is-active');
+        // 隐藏所有内容容器
+        Object.keys(containers).forEach(function (k) { containers[k].style.display = 'none'; });
+        // 懒渲染 + 展示目标 issue
+        if (!rendered[issue]) {
+          try {
+            containers[issue].appendChild(buildView(REPORTS[issue]));
+            rendered[issue] = true;
+          } catch (e) {
+            containers[issue].appendChild(el('pre', { class: 'weekly-issue__err', text: '⚠ 渲染 ' + issue + ' 失败：\n' + (e && e.message ? e.message : e) }));
+          }
+        }
+        containers[issue].style.display = '';
+      });
+      tabBar.appendChild(tab);
+
+      // --- 内容容器（非 active 的 display:none） ---
+      var wrap = el('div', { class: 'weekly-issue', 'data-issue': issue });
+      if (!isActive) wrap.style.display = 'none';
+      containers[issue] = wrap;
+      contentArea.appendChild(wrap);
     });
+
+    view.appendChild(tabBar);
+    view.appendChild(contentArea);
+
+    // 渲染最新一期（第一个 tab，默认激活）
+    try {
+      containers[issues[0]].appendChild(buildView(REPORTS[issues[0]]));
+      rendered[issues[0]] = true;
+    } catch (e) {
+      containers[issues[0]].appendChild(el('pre', { class: 'weekly-issue__err', text: '⚠ 渲染 ' + issues[0] + ' 失败：\n' + (e && e.message ? e.message : e) }));
+    }
+
     view._weeklyInitialized = true;
   }
   window.initWeeklyView = initWeeklyView;
