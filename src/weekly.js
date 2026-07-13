@@ -5,7 +5,7 @@
    - 严格无副作用：仅在 window.initWeeklyView() 时挂载
    ============================================================ */
 
-import { renderMermaidSVG } from 'https://esm.sh/beautiful-mermaid@1.1.3';
+// mermaid 在 renderMermaid() 内 dynamic import 加载（避免 module 顶层 import 在 file:// 下被 CORS 拦）
 
 (function () {
   'use strict';
@@ -143,30 +143,47 @@ import { renderMermaidSVG } from 'https://esm.sh/beautiful-mermaid@1.1.3';
     return body;
   }
 
-  // ============== 渲染单个 mermaid ==============
+  // ============== 渲染单个 mermaid（dynamic import 避免 file:// CORS） ==============
+  let _mermaidPromise = null;
+  function loadMermaid() {
+    if (_mermaidPromise) return _mermaidPromise;
+    _mermaidPromise = import('https://esm.sh/beautiful-mermaid@1.1.3')
+      .then(function (mod) { return mod.renderMermaidSVG; })
+      .catch(function (err) {
+        _mermaidPromise = null;  // retry next time
+        throw err;
+      });
+    return _mermaidPromise;
+  }
   function renderMermaid(target, code, caption, theme) {
     const wrap = el('div', { class: 'weekly-mermaid' });
     if (caption) wrap.appendChild(el('div', { class: 'weekly-mermaid__cap', text: caption }));
-    try {
-      const svg = renderMermaidSVG(code, {
-        bg: 'transparent',
-        fg: '#E8E6E1',
-        line: '#4A4F58',
-        accent: '#FF7A45',
-        muted: '#8A8F98',
-        surface: '#151A21',
-        border: '#2A323D',
-        font: 'JetBrains Mono, Inter, -apple-system, sans-serif',
-        nodeSpacing: 28,
-        layerSpacing: 50,
-        transparent: true
-      });
-      wrap.insertAdjacentHTML('beforeend', svg);
-    } catch (e) {
-      wrap.classList.add('is-err');
-      wrap.appendChild(el('pre', { text: '⚠ mermaid 渲染失败：\n' + (e && e.message ? e.message : e) + '\n\n--- source ---\n' + code }));
-    }
+    const opts = {
+      bg: 'transparent',
+      fg: '#E8E6E1',
+      line: '#4A4F58',
+      accent: '#FF7A45',
+      muted: '#8A8F98',
+      surface: '#151A21',
+      border: '#2A323D',
+      font: 'JetBrains Mono, Inter, -apple-system, sans-serif',
+      nodeSpacing: 28,
+      layerSpacing: 50,
+      transparent: true
+    };
     target.appendChild(wrap);
+    loadMermaid().then(function (render) {
+      try {
+        const svg = render(code, opts);
+        wrap.insertAdjacentHTML('beforeend', svg);
+      } catch (e) {
+        wrap.classList.add('is-err');
+        wrap.appendChild(el('pre', { text: '⚠ mermaid 渲染失败：\n' + (e && e.message ? e.message : e) + '\n\n--- source ---\n' + code }));
+      }
+    }).catch(function (err) {
+      wrap.classList.add('is-err');
+      wrap.appendChild(el('pre', { text: '⚠ mermaid 加载失败（file:// CORS 或网络问题）：\n' + (err && err.message ? err.message : err) + '\n\n降级：周报文字与表格仍可阅读，mermaid 图渲染需要外网。' }));
+    });
   }
 
   // ============== 渲染各 section ==============
@@ -175,7 +192,7 @@ import { renderMermaidSVG } from 'https://esm.sh/beautiful-mermaid@1.1.3';
     return el('header', { class: 'weekly-head' }, [
       el('div', null, [
         el('div', { class: 'weekly-head__kicker', text: 'Weekly Note · 2026·W27 · 投资建议' }),
-        el('h1', { class: 'weekly-head__title', html: 'AI 产业链 <em>周度</em> 投资建议 · <em>2026-07-07</em>' }),
+        el('h1', { class: 'weekly-head__title', html: 'AI 产业链 <em>周度</em> 投资建议 · <em>' + m.issue + '</em>' }),
         el('p', { class: 'weekly-head__sub', text: '两周期表现 + 7 关键标的深度拆解 + Swarm 多智能体校验 — ' + m.source + ' 财务数据 + 融资融券' })
       ]),
       el('div', { class: 'weekly-head__meta' }, [
@@ -465,6 +482,7 @@ import { renderMermaidSVG } from 'https://esm.sh/beautiful-mermaid@1.1.3';
   }
 
   function renderCoverage(D) {
+    const m = D.meta;
     const grid = el('div', { class: 'weekly-cov' });
     const order = ['upstream', 'infra', 'model', 'apps', 'embodied'];
     const names = { upstream: '上游', infra: '中游 Infra', model: '中游 Model', apps: '下游 Apps', embodied: '终端' };
@@ -480,7 +498,7 @@ import { renderMermaidSVG } from 'https://esm.sh/beautiful-mermaid@1.1.3';
         list.appendChild(el('li', null, [el('b', null, code), document.createTextNode(name)]));
       });
       col.appendChild(list);
-      col.appendChild(el('div', { class: 'weekly-cov__more', text: '+ ' + (c.count - c.samples.length) + ' 只 · 完整列表见 reports/weekly-2026-07-07.md 附录 A' }));
+      col.appendChild(el('div', { class: 'weekly-cov__more', text: '+ ' + (c.count - c.samples.length) + ' 只 · 完整列表见 reports/weekly-' + m.issue + '.md 附录 A' }));
       grid.appendChild(col);
     });
     return grid;
@@ -489,6 +507,7 @@ import { renderMermaidSVG } from 'https://esm.sh/beautiful-mermaid@1.1.3';
   // ============== 顶层 ==============
   function buildView(D) {
     const root = el('div', { class: 'weekly-root' });
+    const m = D.meta;
 
     // 1. Header + KPI
     root.appendChild(renderHeader(D));
@@ -498,7 +517,7 @@ import { renderMermaidSVG } from 'https://esm.sh/beautiful-mermaid@1.1.3';
     root.appendChild(renderObservations(D));
 
     // ── Section 1: 宏观叙事 ──
-    const s1 = section('1', '宏观背景与市场叙事', '6/25 → 7/7 · 两周期');
+    const s1 = section('1', '宏观背景与市场叙事', m.period + ' · 两周期');
     s1.appendChild(renderBeats(D));
     s1.appendChild(renderCatalysts(D));
     root.appendChild(s1);
@@ -524,7 +543,7 @@ import { renderMermaidSVG } from 'https://esm.sh/beautiful-mermaid@1.1.3';
     const code2 = mermaidMargin(D);
     if (code2) {
       const m2 = el('div');
-      renderMermaid(m2, code2, '图 2 · 寒武纪 8 天融资融券趋势（6/25 → 7/6 · 余额 261→240 亿 · -8%）');
+      renderMermaid(m2, code2, '图 2 · 寒武纪融资融券趋势 · ' + m.period);
       root.appendChild(m2);
     }
 
@@ -578,7 +597,7 @@ import { renderMermaidSVG } from 'https://esm.sh/beautiful-mermaid@1.1.3';
 
     // Foot
     root.appendChild(el('footer', { class: 'weekly-foot' }, [
-      el('span', { text: 'v1.0 · 2026-07-07 · Generated with vibe-trading MCP + Claude Code' }),
+      el('span', { text: 'v1.0 · ' + m.issue + ' · Generated with vibe-trading MCP + Claude Code' }),
       el('span', { text: '数据源：yfinance / Eastmoney · 仅供内部研究使用' })
     ]));
 
@@ -595,15 +614,40 @@ import { renderMermaidSVG } from 'https://esm.sh/beautiful-mermaid@1.1.3';
     return s;
   }
 
-  // ============== 挂载入口 ==============
+  // ============== 挂载入口（多期追加） ==============
+  // 周报视图按时间倒序渲染所有期数：最新在上，最早在下。
+  // 每期是一个独立 section（issue-stamp 锚点 + 周期间隔线）。
   function initWeeklyView() {
     const view = document.getElementById('weekly-view');
     if (!view) return;
     if (view._weeklyInitialized) return;
-    const D = window.WEEKLY_REPORT;
-    if (!D) { view.innerHTML = '<p style="color:var(--crimson)">⚠ WEEKLY_REPORT 数据未加载</p>'; return; }
+    const REPORTS = window.WEEKLY_REPORTS;
+    if (!REPORTS || Object.keys(REPORTS).length === 0) {
+      view.innerHTML = '<p style="color:var(--crimson);padding:24px">⚠ WEEKLY_REPORTS 数据未加载</p>';
+      return;
+    }
     view.innerHTML = '';
-    view.appendChild(buildView(D));
+
+    // 按时间倒序排序（最新在最上面）
+    const issues = Object.keys(REPORTS).sort().reverse();
+    issues.forEach(function (issue, idx) {
+      const D = REPORTS[issue];
+      // 每期包一层 section，加 issue stamp + 间隔线
+      const wrap = el('div', { class: 'weekly-issue', 'data-issue': issue });
+      // 期号 banner
+      const banner = el('div', { class: 'weekly-issue__banner' });
+      banner.appendChild(el('span', { class: 'weekly-issue__tag', text: 'ISSUE ' + (idx + 1) + ' / ' + issues.length + ' · 最新' }));
+      banner.appendChild(el('span', { class: 'weekly-issue__date', text: issue + ' · ' + (D.meta && D.meta.period ? D.meta.period : '') }));
+      if (idx > 0) banner.appendChild(el('span', { class: 'weekly-issue__sep', text: '↑ 上方为更早期报' }));
+      wrap.appendChild(banner);
+      // 渲染主体
+      try {
+        wrap.appendChild(buildView(D));
+      } catch (e) {
+        wrap.appendChild(el('pre', { class: 'weekly-issue__err', text: '⚠ 渲染 ' + issue + ' 失败：\n' + (e && e.message ? e.message : e) }));
+      }
+      view.appendChild(wrap);
+    });
     view._weeklyInitialized = true;
   }
   window.initWeeklyView = initWeeklyView;

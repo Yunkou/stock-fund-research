@@ -881,3 +881,55 @@
   .weekly-swarm__cell:nth-child(1),
   .weekly-swarm__cell:nth-child(2) { border-bottom: 1px solid var(--line); }
 }
+
+/* ═══ Multi-period issue separator (added 2026-07-13) ═══ */
+.weekly-issue {
+  position: relative;
+}
+.weekly-issue + .weekly-issue {
+  margin-top: 80px;
+  padding-top: 32px;
+  border-top: 2px dashed var(--line);
+}
+.weekly-issue__banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+  padding: 10px 16px;
+  background: linear-gradient(90deg, rgba(255, 122, 69, 0.08), rgba(255, 122, 69, 0));
+  border-left: 3px solid var(--amber);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+}
+.weekly-issue__tag {
+  color: var(--amber);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.weekly-issue__date {
+  color: var(--ink);
+  font-weight: 500;
+}
+.weekly-issue__sep {
+  margin-left: auto;
+  color: var(--ink-mute);
+  font-size: 10px;
+  font-style: italic;
+}
+.weekly-issue__err {
+  background: rgba(224, 86, 122, 0.08);
+  border: 1px solid var(--crimson);
+  color: var(--crimson);
+  padding: 12px 16px;
+  font-size: 12px;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Anchor target for issue navigation */
+.weekly-issue[data-issue] {
+  scroll-margin-top: 24px;
+}
